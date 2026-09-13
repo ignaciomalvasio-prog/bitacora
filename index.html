@@ -515,6 +515,30 @@ function route(oA,dA){
 const legKms=L=>L.slice(1).map((a,i)=>hav([L[i][3],L[i][4]],[a[3],a[4]]));
 const flyHours=km=>km/830+0.75;
 
+/* Casi nadie vuelve por otro lado: el pasaje de ida y vuelta es el mismo y la
+   escala se repite. Pero route() no es simétrica —penaliza la escala según de
+   qué lado del camino queda—, así que Córdoba→Panamá→Montego Bay puede volver
+   por Bogotá. Cuando un tramo deshace a otro, le copiamos la ruta al revés. */
+const sameAp=(x,y)=>!!x&&!!y&&x[0]===y[0];
+function undoes(t,ref){
+  if(!t.route||!ref.route) return false;
+  return sameAp(t.route.legs[0],ref.route.legs.at(-1)) && sameAp(t.route.legs.at(-1),ref.route.legs[0]);
+}
+function revRoute(r){
+  const legs=r.legs.slice().reverse();
+  return {legs,km:legKms(legs).reduce((a,b)=>a+b,0),via:r.via||null};
+}
+/* Copia la ruta de `ref` (dada vuelta) a todo tramo que la deshaga y que el
+   usuario no haya corregido a mano. La fecha no se toca: esa sale de las fotos. */
+function mirrorFrom(ref,list){
+  (list||S.tramos).forEach(t=>{
+    if(t===ref||t.manual||t.mode==='ground') return;
+    if(!undoes(t,ref)) return;
+    t.route=revRoute(ref.route); t.mirror=true;
+    if(!t.airline&&ref.airline) t.airline=ref.airline;
+  });
+}
+
 /* ---------- state ---------- */
 const S={photos:[],noGeo:[],home:null,homeCity:null,trip:null,trips:[],tramos:[],ivIdx:0,tone:'rec',skipped:false};
 
@@ -853,6 +877,9 @@ function buildTramos(){
     T.push({a,b,km,mode,orig:mode==='ground'?'ground':null,route:r,date,confirmed:false,airline:'',
             needsCard:mode!=='ground'});
   }
+  /* La vuelta hereda la ida: se mira contra los tramos anteriores, no sólo
+     contra el primero, porque un viaje puede tener varias idas y vueltas. */
+  for(let i=1;i<T.length;i++) for(let j=0;j<i;j++) if(undoes(T[i],T[j])){ mirrorFrom(T[j],[T[i]]); break }
   S.tramos=T; S.ivIdx=T.findIndex(t=>t.needsCard);
 }
 
@@ -942,6 +969,7 @@ function flightCard(t){
     ${r.via?`<div class="via">vía <b>${r.via[1].split(/[-\/]/)[0]}</b></div>`:`<div class="via">vuelo directo</div>`}
     <div class="legs">${legs.slice(1).map((a,i)=>`<span class="leg">${legs[i][0]}→${a[0]} · ${fmtN(kms[i])} km</span>`).join('')}</div>
     <div class="dist">${fmtN(r.km)} km · ${flyHours(r.km).toFixed(1)} h en el aire</div>
+    ${t.mirror?`<div class="via" style="color:var(--tx3)">Supuse que volviste por donde fuiste${r.via?', con la misma escala':''}. Si no, corregilo.</div>`:''}
     <div class="acts"><button class="btn" data-a="ok">Sí, así fue</button><button class="btn ghost" data-a="fix">Corregir</button></div>`;
   c.querySelector('[data-a=ok]').onclick=()=>{t.confirmed=true;renderIv()};
   c.querySelector('[data-a=fix]').onclick=()=>{c.replaceWith(fixCard(t))};
@@ -973,7 +1001,10 @@ function fixCard(t){
     const [y,m,d]=c.querySelector('#fD').value.split('-').map(Number);
     t.date=new Date(y,m-1,d,10,0);
     t.airline=c.querySelector('#fA').value.trim();
-    t.confirmed=true;t.manual=true;renderIv();
+    t.confirmed=true;t.manual=true;t.mirror=false;
+    /* Si corregís la ida, la vuelta se corrige sola: es el mismo pasaje. */
+    mirrorFrom(t);
+    renderIv();
   };
   return c;
 }
@@ -1009,7 +1040,7 @@ function renderTrip(){
       const r=t.route;
       host.appendChild(el('div','day fly',`<div class="dnum">${dshort(t.date)}</div>
         <div class="flycard"><span class="em">✈️</span><span>${t.a.name} → ${t.b.name}<s>${r.legs.map(l=>l[0]).join(' · ')}${r.via?' (escala)':' (directo)'} · ${fmtN(r.km)} km${t.airline?' · '+t.airline:''}</s></span>
-        <span class="est">${t.manual?'corregido':t.confirmed?'confirmado':'estimado'}</span></div>`));
+        <span class="est">${t.manual?'corregido':t.mirror?'igual que la ida':t.confirmed?'confirmado':'estimado'}</span></div>`));
     } else if(t.mode==='ground'&&i>0&&i<S.tramos.length-1){
       host.appendChild(el('div','day fly',`<div class="dnum">${dshort(t.date)}</div>
         <div class="flycard"><span class="em">🚆</span><span>${t.a.name} → ${t.b.name}<s>${fmtN(t.km)} km por tierra</s></span></div>`));
