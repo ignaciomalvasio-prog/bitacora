@@ -231,6 +231,13 @@ h2{font-size:13px;text-transform:uppercase;letter-spacing:.09em;color:var(--tx3)
 .authcard input{width:100%;background:var(--bg3);border:1px solid var(--line);color:var(--tx);
   padding:12px;border-radius:9px;font:inherit;font-size:14.5px}
 .authcard .btn{width:100%}
+.gbtn{background:#fff;color:#1f1f1f;display:flex;align-items:center;justify-content:center;gap:9px}
+.gbtn:hover{background:#eceae7}
+.gbtn span{display:inline-flex;width:19px;height:19px;align-items:center;justify-content:center;
+  border-radius:50%;background:#4285f4;color:#fff;font:700 12px/1 system-ui}
+.sep{display:flex;align-items:center;gap:10px;margin:18px 0 14px;color:var(--tx3);font-size:12px}
+.sep:before,.sep:after{content:"";flex:1;height:1px;background:var(--line)}
+.sep s{text-decoration:none}
 .phead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:22px}
 .pacts{display:flex;gap:8px;flex-shrink:0}
 /* cada viaje es una fila que se toca entera, no un botón escondido adentro */
@@ -337,12 +344,23 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:22px 0;color:var
     <h1>Tu bitácora<br><em>te espera adentro</em>.</h1>
     <p>Entrá y tenés tus viajes, tus vuelos y tu récord en un solo lugar, viaje tras viaje.</p>
     <div class="card authcard">
-      <label>¿Cómo te llamás?</label>
-      <input id="auName" placeholder="Igna" autocomplete="given-name" enterkeyhint="go">
-      <label style="margin-top:12px">Email <s>(opcional)</s></label>
-      <input id="auMail" type="email" placeholder="vos@mail.com" autocomplete="email" enterkeyhint="go">
+      <button class="btn gbtn" id="auGoogle"><span>G</span>Entrar con Google</button>
+      <div class="sep"><s>o con tu mail</s></div>
+      <label>Email</label>
+      <input id="auMail" type="email" placeholder="vos@mail.com" autocomplete="email" enterkeyhint="next">
+      <label style="margin-top:12px">Contraseña</label>
+      <input id="auPass" type="password" placeholder="••••••••" autocomplete="current-password" enterkeyhint="go">
       <button class="btn" id="auGo" style="margin-top:16px">Entrar</button>
-      <p class="mnote" id="auNote">Por ahora tu cuenta vive en este dispositivo: no hay servidor todavía, así que no te pedimos contraseña en vez de inventarte una que no protegería nada. Tus viajes quedan guardados acá y podés bajarte un respaldo cuando quieras.</p>
+      <button class="btn ghost" id="auNew" style="margin-top:8px">Crear mi cuenta</button>
+      <p class="mnote" id="auNote">Con cuenta, tus viajes viven en el servidor y te siguen a cualquier teléfono. La contraseña la maneja Google: nosotros nunca la vemos.</p>
+      <div class="sep"><s>o</s></div>
+      <button class="btn ghost sm" id="auLocalGo">Probar sin cuenta, en este aparato</button>
+      <div id="auLocalBox" hidden style="margin-top:12px">
+        <label>¿Cómo te llamás?</label>
+        <input id="auName" placeholder="Igna" autocomplete="given-name" enterkeyhint="go">
+        <button class="btn sm" id="auLocalIn" style="margin-top:10px">Entrar sin cuenta</button>
+        <p class="mnote">Sin cuenta los viajes quedan sólo acá: si borrás el navegador se van con él. Después podés crear la cuenta y se suben solos.</p>
+      </div>
     </div>
   </div>
 </div>
@@ -378,6 +396,7 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:22px 0;color:var
       <div><label>Casa</label><button class="geob" id="prHome">—</button></div>
       <button class="btn" id="prSave">Guardar</button>
       <div class="rec" id="prStats" style="margin-top:4px"></div>
+      <p class="mnote" id="prMode" style="margin-top:0"></p>
       <button class="btn ghost" id="prExport">Bajar un respaldo</button>
       <button class="btn ghost" id="prOut">Cerrar sesión</button>
     </div>
@@ -682,12 +701,82 @@ function db(){
 const rq=r=>new Promise((ok,bad)=>{r.onsuccess=()=>ok(r.result);r.onerror=()=>bad(r.error)});
 /* Una transacción por operación a propósito: IndexedDB cierra la transacción
    apenas la cola de microtasks se vacía, así que un await adentro la mata. */
-const dbPut=async(s,v)=>{const d=await db();return rq(d.transaction(s,'readwrite').objectStore(s).put(v))};
-const dbGet=async(s,k)=>{const d=await db();return rq(d.transaction(s,'readonly').objectStore(s).get(k))};
-const dbAll=async s=>{const d=await db();return rq(d.transaction(s,'readonly').objectStore(s).getAll())};
-const dbDel=async(s,k)=>{const d=await db();return rq(d.transaction(s,'readwrite').objectStore(s).delete(k))};
-const dbBy=async(s,i,k)=>{const d=await db();return rq(d.transaction(s,'readonly').objectStore(s).index(i).getAll(k))};
+const lPut=async(s,v)=>{const d=await db();return rq(d.transaction(s,'readwrite').objectStore(s).put(v))};
+const lGet=async(s,k)=>{const d=await db();return rq(d.transaction(s,'readonly').objectStore(s).get(k))};
+const lAll=async s=>{const d=await db();return rq(d.transaction(s,'readonly').objectStore(s).getAll())};
+const lDel=async(s,k)=>{const d=await db();return rq(d.transaction(s,'readwrite').objectStore(s).delete(k))};
+const lBy=async(s,i,k)=>{const d=await db();return rq(d.transaction(s,'readonly').objectStore(s).index(i).getAll(k))};
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+
+/* ============ SERVIDOR (Firebase) ============
+   Estas claves no son secretas: son el identificador público del proyecto y
+   están pensadas para viajar dentro del HTML. Lo que protege los datos son las
+   reglas de Firestore, que atan cada documento al dueño de la sesión.
+   El SDK se baja recién cuando hace falta: quien entra en modo local nunca
+   paga esa descarga, y si la red falla la app sigue andando en este aparato. */
+const FBCONF={
+  apiKey:"AIzaSyAQGkyiiTuc-q1MEDQuS1G2K5o8EO3786g",
+  authDomain:"bitacora-b5b6f.firebaseapp.com",
+  projectId:"bitacora-b5b6f",
+  storageBucket:"bitacora-b5b6f.firebasestorage.app",
+  messagingSenderId:"71730080880",
+  appId:"1:71730080880:web:b3f10596b9bb9183eb18b5"
+};
+const FBV='https://www.gstatic.com/firebasejs/10.12.5/';
+const FB={on:false,uid:null,fs:null,au:null,A:null,F:null};
+let fbP=null;
+function fbLoad(){
+  if(fbP) return fbP;
+  return fbP=(async()=>{
+    if(typeof window!=='undefined'&&window.__noFB) throw new Error('sin servidor');
+    /* Una red mala no puede dejar la app colgada en una pantalla en blanco: si
+       el SDK no llegó en diez segundos, se sigue en modo local y se avisa. */
+    const tarde=new Promise((_,bad)=>setTimeout(()=>bad(new Error('el servidor tarda demasiado')),10000));
+    const [C,A,F]=await Promise.race([Promise.all([
+      import(FBV+'firebase-app.js'), import(FBV+'firebase-auth.js'), import(FBV+'firebase-firestore.js')]),tarde]);
+    const app=C.initializeApp(FBCONF);
+    FB.A=A; FB.F=F; FB.au=A.getAuth(app); FB.fs=F.getFirestore(app);
+    /* La sesión sobrevive a cerrar el navegador: entrar una vez por teléfono. */
+    try{ await A.setPersistence(FB.au,A.browserLocalPersistence) }catch(e){}
+    return FB;
+  })();
+}
+/* Dónde vive cada cosa del lado del servidor. El árbol arranca en el uid, que
+   es exactamente lo que piden las reglas publicadas. */
+const fsCol=s=>FB.F.collection(FB.fs,'users',FB.uid,s);
+const fsDoc=(s,k)=>FB.F.doc(FB.fs,'users',FB.uid,s,String(k));
+const KEYOF={meta:'k',trips:'id',photos:'id'};
+/* Firestore no traga undefined ni Date; el resto del programa a veces los
+   produce. Se limpian acá y no en veinte lugares. */
+function clean(v){
+  if(v===undefined) return null;
+  if(v instanceof Date) return +v;
+  if(Array.isArray(v)) return v.map(clean);
+  if(v&&typeof v==='object'){ const o={}; for(const k in v){ if(v[k]!==undefined) o[k]=clean(v[k]) } return o }
+  return v;
+}
+/* Un solo punto de despacho: con sesión en el servidor todo va a Firestore,
+   sin sesión todo va a IndexedDB. Ninguna otra parte del programa pregunta. */
+const dbPut=async(s,v)=>{
+  if(!FB.on) return lPut(s,v);
+  return FB.F.setDoc(fsDoc(s,v[KEYOF[s]]),clean(v));
+};
+const dbGet=async(s,k)=>{
+  if(!FB.on) return lGet(s,k);
+  const d=await FB.F.getDoc(fsDoc(s,k)); return d.exists()?d.data():undefined;
+};
+const dbAll=async s=>{
+  if(!FB.on) return lAll(s);
+  return (await FB.F.getDocs(fsCol(s))).docs.map(d=>d.data());
+};
+const dbDel=async(s,k)=>{
+  if(!FB.on) return lDel(s,k);
+  return FB.F.deleteDoc(fsDoc(s,k));
+};
+const dbBy=async(s,i,k)=>{
+  if(!FB.on) return lBy(s,i,k);
+  return (await FB.F.getDocs(FB.F.query(fsCol(s),FB.F.where(i,'==',k)))).docs.map(d=>d.data());
+};
 
 /* Las fotos originales no entran: un viaje son cientos de MB y el navegador
    empieza a borrar solo. Guardamos una miniatura, que es lo que se mira. */
@@ -804,25 +893,98 @@ async function savePhotos(id,onProg){
 }
 
 /* ============ SESIÓN ============
-   Hoy la cuenta vive en este dispositivo: no hay servidor al que pedirle una
-   contraseña, y una contraseña que valida el propio navegador no protege de
-   nada, así que no la pedimos y no mentimos diciendo que sí. Cuando haya
-   servidor, se reemplazan estas cuatro funciones y listo. */
+   Dos modos, misma app. Con cuenta, los viajes viven en el servidor y te
+   siguen a cualquier teléfono. Sin cuenta, viven en este aparato y no salen
+   de acá: sirve para probar, pero si borrás el navegador se van con él.
+   El resto del programa no distingue uno del otro. */
 const AUTH={
   user:null,
-  get remote(){ return false },
-  async load(){ return this.user=(await dbGet('meta','perfil'))||null },
-  async signIn(name,email){
-    const u={k:'perfil',name:(name||'').trim(),email:(email||'').trim(),since:Date.now()};
+  get remote(){ return FB.on },
+  /* Al abrir: si hay sesión de Firebase guardada, el servidor la devuelve sola.
+     Esperamos una sola respuesta de onAuthStateChanged y seguimos. */
+  async load(){
+    try{
+      await fbLoad();
+      const fu=await new Promise(res=>{
+        const off=FB.A.onAuthStateChanged(FB.au,u=>{ off(); res(u) });
+        setTimeout(()=>res(FB.au.currentUser||null),8000);
+      });
+      if(fu) return this.user=await this.adopt(fu);
+    }catch(e){ /* sin red o SDK bloqueado: se cae al modo local */ }
+    FB.on=false;
+    return this.user=(await lGet('meta','perfil'))||null;
+  },
+  /* Toma el usuario de Firebase y a partir de ahí todo el almacenamiento
+     apunta al servidor. El perfil se lee (o se crea) ya del lado remoto. */
+  async adopt(fu){
+    FB.uid=fu.uid; FB.on=true;
+    let p=await dbGet('meta','perfil');
+    if(!p){
+      p={k:'perfil',name:fu.displayName||(fu.email||'').split('@')[0]||'Viajero',
+         email:fu.email||'',since:Date.now()};
+      await dbPut('meta',p);
+    }
+    p.uid=fu.uid; if(fu.email) p.email=p.email||fu.email;
+    return p;
+  },
+  async google(){
+    await fbLoad();
+    const prov=new FB.A.GoogleAuthProvider();
+    let cred;
+    try{ cred=await FB.A.signInWithPopup(FB.au,prov) }
+    catch(e){
+      /* En muchos celulares el pop-up no abre. El redirect siempre funciona:
+         la app se recarga sola y vuelve ya con la sesión hecha. */
+      if(/popup|cancelled|blocked/i.test(e.code||e.message||'')){ await FB.A.signInWithRedirect(FB.au,prov); return null }
+      throw e;
+    }
+    return this.user=await this.adopt(cred.user);
+  },
+  async email(mail,pass,crear){
+    await fbLoad();
+    mail=(mail||'').trim(); pass=pass||'';
+    if(!mail||!pass) throw new Error('Falta el mail o la contraseña');
+    const f=crear?FB.A.createUserWithEmailAndPassword:FB.A.signInWithEmailAndPassword;
+    const cred=await f(FB.au,mail,pass);
+    return this.user=await this.adopt(cred.user);
+  },
+  /* Modo sin cuenta: no hay a quién pedirle una contraseña, así que no la
+     pedimos en vez de inventar una que no protegería nada. */
+  async local(name,mail){
+    FB.on=false; FB.uid=null;
+    const u={k:'perfil',name:(name||'').trim(),email:(mail||'').trim(),since:Date.now()};
     if(!u.name) throw new Error('Falta el nombre');
-    await dbPut('meta',u); return this.user=u;
+    await lPut('meta',u); return this.user=u;
   },
   async update(patch){
     const u={...(this.user||{k:'perfil',since:Date.now()}),...patch,k:'perfil'};
-    await dbPut('meta',u); return this.user=u;
+    delete u.uid;
+    await dbPut('meta',u); u.uid=FB.uid; return this.user=u;
   },
-  async signOut(){ await dbDel('meta','perfil'); this.user=null; }
+  async signOut(){
+    if(FB.on){ try{ await FB.A.signOut(FB.au) }catch(e){} FB.on=false; FB.uid=null; }
+    else await lDel('meta','perfil');
+    this.user=null;
+  }
 };
+/* Si entrás con cuenta por primera vez desde un teléfono donde ya habías
+   armado viajes sin cuenta, se suben. Sólo cuando el servidor está vacío:
+   dos aparatos con datos distintos no se mezclan a ciegas. */
+async function subirLocales(onProg){
+  if(!FB.on) return 0;
+  let locales=[]; try{ locales=await lAll('trips') }catch(e){ return 0 }
+  if(!locales.length) return 0;
+  const remotos=await dbAll('trips');
+  if(remotos.length) return 0;
+  let n=0;
+  for(const t of locales){
+    const phs=await lBy('photos','tripId',t.id);
+    for(const p of phs) await dbPut('photos',p);
+    await dbPut('trips',t); n++;
+    if(onProg) onProg(n/locales.length);
+  }
+  return n;
+}
 
 /* ---------- ingest ---------- */
 async function ingest(files){
@@ -1826,18 +1988,43 @@ $('#homeInput').addEventListener('keydown',e=>{ if(e.key==='Enter'){e.preventDef
 $('#chipEdit').onclick=()=>openHomeModal();
 
 /* ---- entrar, panel y perfil ---- */
-$('#auGo').onclick=async()=>{
-  const b=$('#auGo');
+/* Firebase devuelve códigos; acá se traducen a algo que se entienda. */
+function authMsg(e){
+  const c=(e&&e.code)||'';
+  if(/wrong-password|invalid-credential|user-not-found/.test(c)) return 'Mail o contraseña que no coinciden. Si nunca entraste, tocá "Crear mi cuenta".';
+  if(/email-already-in-use/.test(c)) return 'Ese mail ya tiene cuenta. Entrá con tu contraseña.';
+  if(/weak-password/.test(c)) return 'La contraseña necesita al menos 6 caracteres.';
+  if(/invalid-email/.test(c)) return 'Ese mail no parece un mail.';
+  if(/too-many-requests/.test(c)) return 'Muchos intentos seguidos. Esperá un minuto.';
+  if(/network|unavailable/.test(c)) return 'No hay red. Podés entrar sin cuenta y después subir todo.';
+  return (e&&e.message)||'No pude entrar.';
+}
+/* Todo camino de entrada termina igual: casa, subir lo local si hacía falta,
+   panel. Una sola función para no repetirlo en cuatro botones. */
+async function entrar(fn,btn){
+  const b=$(btn), txt=b.textContent;
+  b.disabled=true; b.textContent='Entrando…';
   try{
-    await AUTH.signIn($('#auName').value,$('#auMail').value);
-  }catch(e){ return alert('Escribí tu nombre para entrar.') }
-  b.disabled=true;
-  /* Recién acá preguntamos la casa: antes de saber quién sos no tiene sentido. */
-  if(!loadHome()) openHomeModal(); else paintChip();
-  await irAlPanel(); b.disabled=false;
-};
-['#auName','#auMail'].forEach(s=>$(s).addEventListener('keydown',e=>{
+    const u=await fn();
+    if(u===null){ return }            /* redirect en curso: la app se recarga sola */
+    if(AUTH.remote){
+      b.textContent='Subiendo tus viajes…';
+      const n=await subirLocales();
+      if(n) alert('Subí '+n+(n===1?' viaje que tenías':' viajes que tenías')+' en este aparato. Ahora te siguen a cualquier teléfono.');
+    }
+    if(!loadHome()) openHomeModal(); else paintChip();
+    await irAlPanel();
+  }catch(e){ alert(authMsg(e)) }
+  finally{ b.disabled=false; b.textContent=txt }
+}
+$('#auGoogle').onclick=()=>entrar(()=>AUTH.google(),'#auGoogle');
+$('#auGo').onclick=()=>entrar(()=>AUTH.email($('#auMail').value,$('#auPass').value,false),'#auGo');
+$('#auNew').onclick=()=>entrar(()=>AUTH.email($('#auMail').value,$('#auPass').value,true),'#auNew');
+$('#auLocalGo').onclick=()=>{ $('#auLocalBox').hidden=false; $('#auLocalGo').hidden=true; $('#auName').focus() };
+$('#auLocalIn').onclick=()=>entrar(()=>AUTH.local($('#auName').value,$('#auMail').value),'#auLocalIn');
+['#auMail','#auPass'].forEach(s=>$(s).addEventListener('keydown',e=>{
   if(e.key==='Enter'){e.preventDefault();$('#auGo').click()} }));
+$('#auName').addEventListener('keydown',e=>{ if(e.key==='Enter'){e.preventDefault();$('#auLocalIn').click()} });
 async function irAlPanel(){
   $('#nPanel').hidden=false; $('#nNew').hidden=false;
   await renderPanel(); show('vPanel');
@@ -1878,6 +2065,9 @@ function openProf(){
       [st.ctry,'países'],[st.ciudades,'lugares'],[st.dias,'días de viaje']]
       .map(s=>`<div class="stat"><b>${s[0]}</b><s>${s[1]}</s></div>`).join('');
   });
+  $('#prMode').textContent=AUTH.remote
+    ? 'Tu cuenta está en el servidor: entrá desde cualquier teléfono y tus viajes están ahí.'
+    : 'Estás sin cuenta: los viajes viven sólo en este aparato. Cerrá sesión y entrá con Google o mail para que se suban y te sigan.';
   $('#profModal').classList.add('on');
 }
 $('#pProf').onclick=()=>openProf();
@@ -1887,7 +2077,9 @@ $('#prSave').onclick=async()=>{
   $('#profModal').classList.remove('on'); await renderPanel();
 };
 $('#prOut').onclick=async()=>{
-  if(!confirm('Cerrás sesión en este dispositivo. Tus viajes quedan guardados.')) return;
+  if(!confirm(AUTH.remote
+    ?'Cerrás sesión. Tus viajes quedan en el servidor y vuelven cuando entres de nuevo.'
+    :'Cerrás sesión en este dispositivo. Tus viajes quedan guardados acá.')) return;
   await AUTH.signOut(); $('#profModal').classList.remove('on');
   ['#nPanel','#nTrip','#nWrite','#nRec','#nNew'].forEach(s=>$(s).hidden=true);
   show('vAuth');
@@ -1905,6 +2097,10 @@ $('#profModal').addEventListener('click',e=>{ if(e.target.id==='profModal') $('#
 /* Lo primero que ve alguien que abre la app: quién es. Si ya entró antes,
    va derecho al panel con todo lo suyo. */
 (async()=>{
+  /* Preguntarle al servidor si ya hay sesión tarda; mostrar la pantalla de
+     entrar durante ese rato haría que alguien ya logueado vea un login que
+     desaparece solo. Mejor no mostrar nada todavía. */
+  $('#vAuth').hidden=true;
   try{ await AUTH.load() }catch(e){}
   if(loadHome()) paintChip();
   if(AUTH.user) await irAlPanel(); else show('vAuth');
