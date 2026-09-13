@@ -80,6 +80,15 @@ h2{font-size:13px;text-transform:uppercase;letter-spacing:.09em;color:var(--tx3)
 .plbl{fill:var(--tx2);font:500 7px sans-serif;paint-order:stroke;stroke:var(--bg);stroke-width:2.4px}
 .mlegend{display:flex;gap:16px;padding:11px 16px;border-top:1px solid var(--line);font-size:12px;color:var(--tx3);flex-wrap:wrap}
 .mlegend i{display:inline-block;width:16px;height:2px;vertical-align:middle;margin-right:6px;border-radius:2px}
+.mlegend .mhint{margin-left:auto;opacity:.7}
+@media(max-width:560px){.mlegend .mhint{margin-left:0;flex-basis:100%}}
+/* El contenedor recorta y se queda con el gesto; el de adentro es el que se mueve. */
+.mzoom{overflow:hidden;touch-action:none;cursor:grab;position:relative}
+.mzoom.zoomed{cursor:move}
+.mpan{transform-origin:50% 50%;will-change:transform}
+.mzoom svg{display:block;width:100%;height:auto;pointer-events:none}
+.mreset{position:absolute;right:10px;top:10px;z-index:3;background:rgba(20,17,15,.86);color:var(--tx2);border:1px solid var(--line);border-radius:999px;padding:7px 13px;font:500 12px inherit;cursor:pointer;backdrop-filter:blur(6px)}
+.mreset:hover{color:var(--tx)}
 
 /* interview */
 .iv{max-width:520px;margin:0 auto}
@@ -112,6 +121,15 @@ h2{font-size:13px;text-transform:uppercase;letter-spacing:.09em;color:var(--tx3)
 .fix{margin-top:14px;display:grid;gap:12px;text-align:left}
 .fix label{font-size:12px;color:var(--tx3);display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em}
 .fix input,.fix select{width:100%;background:var(--bg3);border:1px solid var(--line);color:var(--tx);padding:10px 12px;border-radius:9px;font:inherit;font-size:14px}
+.viarow{display:flex;gap:8px;align-items:center;margin-bottom:7px}
+.viarow select{flex:1;min-width:0}
+.vx{width:34px;height:34px;flex:none;border:1px solid var(--line);border-radius:9px;color:var(--tx3);font-size:13px}
+.vx:hover{border-color:#a6564a;color:#e08a7d}
+.vnone{color:var(--tx3);font-size:13.5px;padding:2px 0 4px}
+.addvia{margin-top:2px;width:auto!important;padding:6px 12px}
+.kmlive{background:var(--bg3);border:1px solid var(--line);border-radius:9px;padding:9px 11px;
+  font-size:12.5px;color:var(--tx2);font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.kmlive b{color:var(--ac2);font-weight:600}
 .skip{display:block;margin:16px auto 0;font-size:13px;color:var(--tx3);text-decoration:underline}
 .skip:hover{color:var(--tx2)}
 
@@ -122,6 +140,20 @@ h2{font-size:13px;text-transform:uppercase;letter-spacing:.09em;color:var(--tx3)
 .tmeta s{text-decoration:none;color:var(--tx3)}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:10px;margin:22px 0}
 .stat{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:13px 14px}
+/* Las tarjetas del panel se abren: son botones, y se nota al tocarlas. */
+.stat.go{cursor:pointer;text-align:left;width:100%;transition:.14s;position:relative}
+.stat.go:hover{border-color:var(--ac);background:#211a15}
+.stat.go:after{content:'›';position:absolute;right:11px;top:10px;color:var(--tx3);font-size:15px}
+.years{display:flex;gap:7px;flex-wrap:wrap;margin:18px 0 0}
+.years button{border:1px solid var(--line);background:var(--bg2);color:var(--tx2);border-radius:20px;padding:5px 13px;font-size:13px}
+.years button:hover{border-color:var(--tx3);color:var(--tx)}
+.years button.on{background:var(--ac);border-color:var(--ac);color:#1a1109;font-weight:600}
+.dlist{margin-top:4px;max-height:56vh;overflow:auto;text-align:left}
+.drow{display:flex;align-items:center;gap:12px;padding:10px 2px;border-bottom:1px solid var(--line);font-size:14px}
+.drow:last-child{border-bottom:0}
+.drow b{font-weight:550;display:block}
+.drow s{text-decoration:none;color:var(--tx3);font-size:12.5px;display:block}
+.drow span{margin-left:auto;color:var(--tx2);font-size:13px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .stat b{display:block;font-size:21px;font-weight:620;letter-spacing:-.02em}
 .stat s{text-decoration:none;font-size:11.5px;color:var(--tx3);text-transform:uppercase;letter-spacing:.05em}
 
@@ -131,8 +163,14 @@ h2{font-size:13px;text-transform:uppercase;letter-spacing:.09em;color:var(--tx3)
 .dnum{font-size:11.5px;color:var(--tx3);text-transform:uppercase;letter-spacing:.07em;font-weight:600}
 .dplace{font-size:19px;font-weight:600;letter-spacing:-.015em;margin:2px 0 3px}
 .dsub{font-size:13.5px;color:var(--tx2);margin-bottom:12px}
-.pois{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:13px}
+.pois{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:13px;align-items:center}
 .poi{background:#241c15;border:1px solid #3b2d1f;color:var(--ac2);border-radius:20px;padding:3px 11px;font-size:12.5px}
+.poi.mine{border-style:dashed}
+.poi .px{color:var(--ac2);opacity:.5;font-size:11px;margin-left:6px;padding:0;line-height:1}
+.poi .px:hover{opacity:1}
+.poiadd{border:1px dashed var(--line);color:var(--tx3);border-radius:20px;padding:3px 11px;font-size:12.5px;background:none}
+.poiadd:hover{border-color:var(--ac);color:var(--ac2)}
+.poinew{background:var(--bg3);border:1px solid var(--ac);color:var(--tx);border-radius:20px;padding:4px 12px;font:inherit;font-size:12.5px;min-width:210px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:6px}
 .grid img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:9px;background:var(--bg3);cursor:pointer;transition:.14s}
 .grid img:hover{opacity:.85}
@@ -182,7 +220,9 @@ h2{font-size:13px;text-transform:uppercase;letter-spacing:.09em;color:var(--tx3)
 .rt2 td.n{text-align:right;font-family:ui-monospace,monospace;font-size:13px;color:var(--tx2)}
 
 /* misc */
-.warn{background:#251c12;border:1px solid #453320;border-radius:11px;padding:13px 15px;font-size:13.5px;color:var(--ac2);display:flex;gap:10px;margin-bottom:16px}
+.warn{background:#251c12;border:1px solid #453320;border-radius:11px;padding:13px 15px;font-size:13.5px;color:var(--ac2);display:flex;gap:10px;align-items:flex-start;margin-bottom:16px}
+.warn .wx{margin-left:auto;flex:none;background:none;border:0;color:var(--ac2);opacity:.55;font-size:15px;line-height:1;cursor:pointer;padding:2px 2px 2px 8px}
+.warn .wx:hover{opacity:1}
 .warn div{color:#d8c4ae}
 /* ---------- modal de casa ----------
    Es lo primero que se ve. Sin casa no hay viaje: no se puede cerrar
@@ -256,7 +296,13 @@ h2{font-size:13px;text-transform:uppercase;letter-spacing:.09em;color:var(--tx3)
 
 .lb{position:fixed;inset:0;background:rgba(8,7,6,.94);z-index:99;display:none;align-items:center;justify-content:center;padding:30px}
 .lb.on{display:flex} .lb img{max-width:100%;max-height:100%;border-radius:10px}
-.lb b{position:absolute;top:20px;right:26px;font-size:26px;color:var(--tx2);cursor:pointer;font-weight:400}
+.lb b{position:absolute;top:20px;right:26px;font-size:26px;color:var(--tx2);cursor:pointer;font-weight:400;z-index:2}
+.lb img{touch-action:pan-y;user-select:none;-webkit-user-drag:none}
+.lbnav{position:absolute;top:50%;transform:translateY(-50%);width:52px;height:52px;border-radius:999px;border:1px solid var(--line);background:rgba(24,20,18,.8);color:var(--tx2);font:400 30px/1 serif;cursor:pointer;z-index:2;display:flex;align-items:center;justify-content:center;padding:0 0 4px}
+.lbnav:hover{color:var(--tx);background:rgba(40,34,30,.9)}
+.lbnav.prev{left:14px} .lbnav.next{right:14px}
+.lbcap{position:absolute;left:0;right:0;bottom:16px;text-align:center;font-size:13px;color:var(--tx3);padding:0 70px}
+.lbcap s{text-decoration:none;margin-left:10px;opacity:.65}
 footer{border-top:1px solid var(--line);margin-top:40px;padding:22px 0;color:var(--tx3);font-size:12.5px}
 [hidden]{display:none!important}
 
@@ -302,6 +348,8 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:22px 0;color:var
   .rec{grid-template-columns:1fr 1fr}
 
   .lb{padding:14px} .lb b{top:12px;right:16px;font-size:32px;padding:6px}
+  /* En el teléfono se pasa con el dedo: las flechas sólo estorban el pulgar. */
+  .lbnav{display:none} .lbcap{padding:0 20px;bottom:12px}
 
   .modal{padding:16px;align-items:flex-end} /* pegado al pulgar, no al centro */
   .mcard{padding:24px 19px 26px;border-radius:18px}
@@ -375,6 +423,7 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:22px 0;color:var
         <button class="btn ghost sm" id="pProf">Tu perfil</button>
       </div>
     </div>
+    <div class="years" id="pYears"></div>
     <div class="stats" id="pStats"></div>
     <div class="mapbox" id="pMapBox"></div>
   </section>
@@ -519,7 +568,12 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:22px 0;color:var
   </section>
 </div>
 
-<div class="lb" id="lb"><b id="lbX">✕</b><img id="lbImg"></div>
+<div class="lb" id="lb"><b id="lbX">✕</b>
+  <button class="lbnav prev" id="lbPrev" type="button" aria-label="Anterior">‹</button>
+  <img id="lbImg">
+  <button class="lbnav next" id="lbNext" type="button" aria-label="Siguiente">›</button>
+  <div class="lbcap"><span id="lbCap"></span><s id="lbNum"></s></div>
+</div>
 
 <footer class="wrap">Prototipo para probar el flujo. Los datos de lugares son una lista local acotada; en producción va una API de POIs sobre Overture.</footer>
 
@@ -632,7 +686,7 @@ function route(oA,dA){
   const O=[oA[3],oA[4]], D=[dA[3],dA[4]], direct=hav(O,D);
   const oHub=HUBCODES.includes(oA[0]), dHub=HUBCODES.includes(dA[0]);
   const needs = direct>2200 && !(oHub&&dHub) || direct>13500;
-  if(!needs) return {legs:[oA,dA],km:direct,via:null};
+  if(!needs) return mkRoute([oA,dA]);
   let best=null;
   for(const h of HUBS){
     if(h[0]===oA[0]||h[0]===dA[0]) continue;
@@ -644,8 +698,8 @@ function route(oA,dA){
     const score=ratio*1000 + (a>b?60:0);
     if(!best||score<best.score) best={score,h,tot};
   }
-  if(!best) return {legs:[oA,dA],km:direct,via:null};
-  return {legs:[oA,best.h,dA],km:best.tot,via:best.h};
+  if(!best) return mkRoute([oA,dA]);
+  return mkRoute([oA,best.h,dA]);
 }
 const legKms=L=>L.slice(1).map((a,i)=>hav([L[i][3],L[i][4]],[a[3],a[4]]));
 const flyHours=km=>km/830+0.75;
@@ -659,9 +713,19 @@ function undoes(t,ref){
   if(!t.route||!ref.route) return false;
   return sameAp(t.route.legs[0],ref.route.legs.at(-1)) && sameAp(t.route.legs.at(-1),ref.route.legs[0]);
 }
-function revRoute(r){
-  const legs=r.legs.slice().reverse();
-  return {legs,km:legKms(legs).reduce((a,b)=>a+b,0),via:r.via||null};
+function revRoute(r){ return mkRoute(r.legs.slice().reverse()) }
+/* Una ruta es la lista de aeropuertos y nada más; las escalas son lo que queda
+   en el medio. `via` se sigue escribiendo porque los viajes guardados antes de
+   que hubiera varias escalas lo tienen, y así se siguen leyendo igual. */
+const viasOf=r=>(r&&r.legs)?r.legs.slice(1,-1):[];
+const apCity=a=>a?a[1].split(/[-\/]/)[0]:'';
+function viaTxt(r){
+  const v=viasOf(r).map(apCity);
+  if(!v.length) return '';
+  return v.length===1?v[0]:v.slice(0,-1).join(', ')+' y '+v.at(-1);
+}
+function mkRoute(legs){
+  return {legs,km:legKms(legs).reduce((a,b)=>a+b,0),via:legs.length>2?legs[1]:null};
 }
 /* Copia la ruta de `ref` (dada vuelta) a todo tramo que la deshaga y que el
    usuario no haya corregido a mano. La fecha no se toca: esa sale de las fotos. */
@@ -676,7 +740,7 @@ function mirrorFrom(ref,list){
 
 /* ---------- state ---------- */
 const S={photos:[],noGeo:[],home:null,homeCity:null,trip:null,trips:[],tramos:[],ivIdx:0,tone:'rec',skipped:false,
-         title:null,renames:{}};
+         title:null,renames:{},addPois:{},warnOff:new Set(),pYear:null};
 
 /* ============ ALMACENAMIENTO ============
    Los viajes viven en IndexedDB, en este dispositivo. La API de acá abajo es
@@ -811,7 +875,7 @@ function routeIn(o){
   if(!o) return null;
   const legs=(o.legs||[]).map(apIn).filter(Boolean);
   if(legs.length<2) return null;
-  return {legs,km:o.km!=null?o.km:legKms(legs).reduce((a,b)=>a+b,0),via:apIn(o.via)};
+  return o.km!=null?{...mkRoute(legs),km:o.km}:mkRoute(legs);
 }
 function tripOut(){
   const T=S.trip;
@@ -821,7 +885,7 @@ function tripOut(){
     createdAt:S.createdAt||(S.createdAt=Date.now()),
     updatedAt:Date.now(),
     home:S.home, homeCity:S.homeCity, noGeo:S.noGeo.length, heic:S.heic||0,
-    renames:S.renames||{},
+    renames:S.renames||{}, addPois:S.addPois||{},
     paradas:T.paradas.map(p=>({name:p.name,auto:p.auto||p.name,cc:p.cc,c:p.c,from:p.from,to:p.to,days:p.days,pois:p.pois||[],
                                photoIds:p.photos.map(x=>x.id)})),
     tramos:S.tramos.map(t=>({a:{name:t.a.name,cc:t.a.cc,c:t.a.c,home:!!t.a.home},
@@ -844,9 +908,10 @@ async function openTrip(id){
   const phs=(await dbBy('photos','tripId',id)).sort((a,b)=>a.ts-b.ts);
   const byId={}; phs.forEach(p=>{ p.url=p.thumb||p.url; byId[p.id]=p });
   S.tripId=rec.id; S.title=rec.title; S.createdAt=rec.createdAt;
-  S.home=rec.home; S.homeCity=rec.homeCity; S.heic=rec.heic||0; S.renames=rec.renames||{};
+  S.home=rec.home; S.homeCity=rec.homeCity; S.heic=rec.heic||0; S.renames=rec.renames||{}; S.addPois=rec.addPois||{};
   S.photos=phs; S.noGeo=[];
-  const paradas=rec.paradas.map(p=>({...p,photos:(p.photoIds||[]).map(i=>byId[i]).filter(Boolean)}))
+  const paradas=rec.paradas.map(p=>({...p,mine:(S.addPois[p.auto||p.name]||[]).filter(x=>(p.pois||[]).includes(x)),
+                                     photos:(p.photoIds||[]).map(i=>byId[i]).filter(Boolean)}))
                            .filter(p=>p.photos.length);
   if(!paradas.length) return false;
   S.trip={photos:phs,paradas}; S.trips=[S.trip];
@@ -1284,6 +1349,13 @@ function tagPois(){
       }
     }
     p.pois=Object.values(hits).sort((a,b)=>b.n-a.n).map(h=>h.poi[0]);
+    /* Los lugares que Igna escribió a mano se suman a los reconocidos y quedan
+       marcados, para poder sacarlos de nuevo. Van guardados contra `auto`, así
+       que sobreviven a rearmar el viaje igual que los nombres cambiados. */
+    p.mine=(S.addPois&&S.addPois[p.auto]||[]).filter(x=>!p.pois.includes(x));
+    /* Los puestos a mano van primero: el escrito recorta a los cinco primeros y
+       lo que uno escribió a propósito no puede quedar afuera del recorte. */
+    p.pois=p.mine.concat(p.pois);
   }
 }
 
@@ -1363,10 +1435,86 @@ function mapSVG(tramos,paradas,homeC,upto){
     <rect x="0" y="0" width="${PW}" height="${PH}" fill="#1b1815"/>${g}
     <path class="land" d="${LAND}" stroke-width="${(.45*sc).toFixed(2)}"/>${arcs}${pins}</svg>`;
 }
+/* El mapa se agranda y se arrastra como una foto: el SVG entero se escala con
+   un transform en vez de recalcular el viewBox. Así los nombres y las líneas
+   crecen junto al mapa, que es lo que uno espera al hacer pinza, y no hace
+   falta volver a dibujar nada mientras el dedo se mueve. */
+const MZMAX=9;
+function mapInto(host,svg,legend){
+  host.innerHTML=`<div class="mzoom"><div class="mpan">${svg}</div></div>`+
+    `<button class="mreset" type="button" hidden>Ver todo el mapa</button>`+(legend||'');
+  zoomable(host);
+}
+function zoomable(host){
+  const box=host.querySelector('.mzoom'), pan=host.querySelector('.mpan'),
+        btn=host.querySelector('.mreset');
+  if(!box||!pan) return;
+  let z=1,tx=0,ty=0;
+  const W=()=>box.offsetWidth||box.clientWidth||0, H=()=>box.offsetHeight||box.clientHeight||0;
+  function apply(){
+    /* El límite del arrastre es el sobrante del zoom: nunca se puede sacar el
+       mapa de la ventana y quedarse mirando el fondo. */
+    if(W()&&H()){
+      const mx=W()*(z-1)/2, my=H()*(z-1)/2;
+      tx=Math.max(-mx,Math.min(mx,tx)); ty=Math.max(-my,Math.min(my,ty));
+    }
+    pan.style.transform=`translate(${tx.toFixed(1)}px,${ty.toFixed(1)}px) scale(${z.toFixed(3)})`;
+    box.classList.toggle('zoomed',z>1.005);
+    if(btn) btn.hidden=z<=1.005;
+  }
+  /* Zoom hacia donde estás mirando: el punto bajo el dedo o el cursor se queda
+     quieto, en vez de saltar al centro. */
+  function zoomAt(f,cx,cy){
+    const nz=Math.max(1,Math.min(MZMAX,z*f));
+    if(nz===z) return;
+    const px=cx-W()/2, py=cy-H()/2;
+    tx=px-(px-tx)*(nz/z); ty=py-(py-ty)*(nz/z);
+    z=nz; apply();
+  }
+  host.mzoomAt=zoomAt;
+  host.mzoomState=()=>({z,tx,ty});
+  function reset(){ z=1;tx=0;ty=0;apply() }
+  host.mzoomReset=reset;
+  if(btn) btn.onclick=reset;
+  box.addEventListener('wheel',e=>{
+    e.preventDefault();
+    const r=box.getBoundingClientRect();
+    zoomAt(Math.exp(-e.deltaY*(e.deltaMode?18:1)*.0018),e.clientX-r.left,e.clientY-r.top);
+  },{passive:false});
+  box.addEventListener('dblclick',e=>{
+    const r=box.getBoundingClientRect();
+    if(z>1.005) reset(); else zoomAt(2.6,e.clientX-r.left,e.clientY-r.top);
+  });
+  /* Un dedo arrastra, dos hacen pinza. Con pointer events los dos casos son la
+     misma lista de punteros y no hay que escribir el mouse aparte del touch. */
+  const P=new Map();
+  let base=null;
+  const pares=()=>[...P.values()];
+  box.addEventListener('pointerdown',e=>{
+    P.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(box.setPointerCapture) try{ box.setPointerCapture(e.pointerId) }catch(_){}
+    if(P.size===2){ const [a,b]=pares(); base=Math.hypot(a.x-b.x,a.y-b.y)||1 }
+  });
+  box.addEventListener('pointermove',e=>{
+    const p=P.get(e.pointerId); if(!p) return;
+    const dx=e.clientX-p.x, dy=e.clientY-p.y;
+    p.x=e.clientX; p.y=e.clientY;
+    if(P.size>=2){
+      const [a,b]=pares(), d=Math.hypot(a.x-b.x,a.y-b.y)||1;
+      const r=box.getBoundingClientRect();
+      if(base) zoomAt(d/base,(a.x+b.x)/2-r.left,(a.y+b.y)/2-r.top);
+      base=d;
+    } else if(z>1.005){ tx+=dx; ty+=dy; apply() }
+  });
+  const suelta=e=>{ P.delete(e.pointerId); if(P.size<2) base=null };
+  box.addEventListener('pointerup',suelta);
+  box.addEventListener('pointercancel',suelta);
+  apply();
+}
+const MLEG=`<div class="mlegend"><span><i style="background:var(--ac)"></i>vuelo</span><span><i style="background:var(--sky)"></i>tierra o tren</span><span><i style="background:var(--tx3)"></i>sin confirmar</span><span class="mhint">Pinza o rueda para agrandar · arrastrá para mover</span></div>`;
 function drawMap(host,upto){
   if(!S.trip)return;
-  host.innerHTML=mapSVG(S.tramos,S.trip.paradas,S.home,upto)+
-   `<div class="mlegend"><span><i style="background:var(--ac)"></i>vuelo</span><span><i style="background:var(--sky)"></i>tierra o tren</span><span><i style="background:var(--tx3)"></i>sin confirmar</span></div>`;
+  mapInto(host,mapSVG(S.tramos,S.trip.paradas,S.home,upto),MLEG);
 }
 
 /* ============ INTERVIEW ============ */
@@ -1404,10 +1552,10 @@ function flightCard(t){
   const c=el('div','fcard');
   c.innerHTML=`<div class="date">✈️ ${dstr(t.date)}</div>
     <div class="route"><span class="c">${t.a.name}</span><span class="ar">→</span><span class="c">${t.b.name}</span></div>
-    ${r.via?`<div class="via">vía <b>${r.via[1].split(/[-\/]/)[0]}</b></div>`:`<div class="via">vuelo directo</div>`}
+    ${viasOf(r).length?`<div class="via">vía <b>${viaTxt(r)}</b></div>`:`<div class="via">vuelo directo</div>`}
     <div class="legs">${legs.slice(1).map((a,i)=>`<span class="leg">${legs[i][0]}→${a[0]} · ${fmtN(kms[i])} km</span>`).join('')}</div>
     <div class="dist">${fmtN(r.km)} km · ${flyHours(r.km).toFixed(1)} h en el aire</div>
-    ${t.mirror?`<div class="via" style="color:var(--tx3)">Supuse que volviste por donde fuiste${r.via?', con la misma escala':''}. Si no, corregilo.</div>`:''}
+    ${t.mirror?`<div class="via" style="color:var(--tx3)">Supuse que volviste por donde fuiste${viasOf(r).length?', con las mismas escalas':''}. Si no, corregilo.</div>`:''}
     <div class="acts"><button class="btn" data-a="ok">Sí, así fue</button><button class="btn ghost" data-a="fix">Corregir</button></div>`;
   c.querySelector('[data-a=ok]').onclick=()=>{t.confirmed=true;renderIv()};
   c.querySelector('[data-a=fix]').onclick=()=>{c.replaceWith(fixCard(t))};
@@ -1431,12 +1579,55 @@ function fixCard(t,after){
    <div class="fix">
     <div><label>Fecha de salida</label><input type="date" id="fD" value="${iso(t.date)}"></div>
     <div><label>Sale de</label><select id="fO">${oNear.map(a=>`<option value="${a[0]}"${a[0]===cur[0][0]?' selected':''}>${a[0]} — ${a[1]}</option>`).join('')}</select></div>
-    <div><label>Escala</label><select id="fV"><option value="">Directo, sin escala</option>${viaOpts.map(a=>`<option value="${a[0]}"${t.route&&t.route.via&&t.route.via[0]===a[0]?' selected':''}>${a[0]} — ${a[1]}</option>`).join('')}</select></div>
+    <div><label>Escalas</label><div id="fVs"></div>
+      <button class="btn ghost sm addvia" id="fVadd">+ Agregar una escala</button></div>
     <div><label>Llega a</label><select id="fT">${dNear.map(a=>`<option value="${a[0]}"${a[0]===cur.at(-1)[0]?' selected':''}>${a[0]} — ${a[1]}</option>`).join('')}</select></div>
+    <div class="kmlive" id="fKm"></div>
     <div><label>Aerolínea (opcional)</label><input id="fA" placeholder="Air France…" value="${t.airline||''}"></div>
     <button class="btn" id="fS">Guardar y confirmar</button>
     ${t.mode==='ground'?'':'<button class="btn ghost" id="fG">No fue en avión — fue por tierra</button>'}
    </div>`;
+  /* Las escalas son una lista que crece y se achica. Cada fila es un select
+     propio; sacarla es sacar la fila. Se redibuja entera en vez de parchearla:
+     con tres filas no se nota y no hay estados intermedios que se peguen. */
+  const vias=viasOf(t.route).map(a=>a[0]);
+  const host=c.querySelector('#fVs');
+  function pintarVias(){
+    host.innerHTML=vias.map((iata,i)=>{
+      /* Los hubs sugeridos más el que ya esté puesto, que puede no ser hub. */
+      const opts=viaOpts.slice();
+      if(iata&&!opts.find(a=>a[0]===iata)){ const a=byIata(iata); if(a) opts.unshift(a) }
+      return `<div class="viarow"><select data-i="${i}">${
+        opts.map(a=>`<option value="${a[0]}"${a[0]===iata?' selected':''}>${a[0]} — ${a[1]}</option>`).join('')
+      }</select><button class="vx" data-x="${i}" title="Sacar esta escala">✕</button></div>`;
+    }).join('')||'<div class="vnone">Directo, sin escalas.</div>';
+    host.querySelectorAll('select').forEach(s=>s.onchange=()=>{ vias[+s.dataset.i]=s.value; pintarKm() });
+    host.querySelectorAll('.vx').forEach(b=>b.onclick=()=>{ vias.splice(+b.dataset.x,1); pintarVias() });
+    /* Más de tres escalas no es un vuelo, es una mudanza. */
+    c.querySelector('#fVadd').hidden=vias.length>=3;
+    pintarKm();
+  }
+  /* Los km se recalculan mientras tocás: es la única forma de darte cuenta de
+     que pusiste una escala absurda antes de guardarla. */
+  function legsAhora(){
+    const O=byIata(c.querySelector('#fO').value), D=byIata(c.querySelector('#fT').value);
+    return [O,...vias.map(byIata),D].filter(Boolean);
+  }
+  function pintarKm(){
+    const legs=legsAhora();
+    const km=legKms(legs).reduce((a,b)=>a+b,0);
+    c.querySelector('#fKm').innerHTML=legs.map(l=>l[0]).join(' → ')+
+      ` · <b>${fmtN(km)} km</b> · ${flyHours(km).toFixed(1)} h en el aire`;
+  }
+  c.querySelector('#fVadd').onclick=()=>{
+    /* La escala nueva arranca en el hub que menos desvío agrega: casi siempre
+       es la que querías, y si no, se cambia con el select. */
+    const usados=new Set(vias);
+    const sug=viaOpts.find(a=>!usados.has(a[0]))||viaOpts[0];
+    vias.push(sug?sug[0]:''); pintarVias();
+  };
+  ['#fO','#fT'].forEach(s=>c.querySelector(s).onchange=()=>pintarVias());
+  pintarVias();
   /* Pasar un tramo a tierra lo saca del récord de vuelos. Es una corrección
      manual como cualquier otra: no se vuelve a preguntar ni se re-estima. */
   const gnd=c.querySelector('#fG');
@@ -1446,9 +1637,11 @@ function fixCard(t,after){
     after();
   };
   c.querySelector('#fS').onclick=()=>{
-    const O=byIata(c.querySelector('#fO').value), Dst=byIata(c.querySelector('#fT').value), V=byIata(c.querySelector('#fV').value);
-    const legs=V?[O,V,Dst]:[O,Dst];
-    t.route={legs,km:legKms(legs).reduce((a,b)=>a+b,0),via:V||null};
+    /* Dos escalas seguidas en el mismo aeropuerto, o una escala en el origen o
+       el destino, no son un vuelo: se caen solas en vez de avisar. */
+    const legs=legsAhora().filter((a,i,arr)=>i===0||a[0]!==arr[i-1][0]);
+    if(legs.length<2) return alert('Un vuelo necesita al menos de dónde sale y a dónde llega.');
+    t.route=mkRoute(legs);
     const [y,m,d]=c.querySelector('#fD').value.split('-').map(Number);
     t.date=new Date(y,m-1,d,10,0);
     t.airline=c.querySelector('#fA').value.trim();
@@ -1511,13 +1704,24 @@ function renderTrip(){
   $('#tStats').innerHTML=st.map(s=>`<div class="stat"><b>${s[0]}</b><s>${s[1]}</s></div>`).join('');
   drawMap($('#tMapBox'),null);
   // avisos
-  let w='';
-  if(S.noGeo.length) w+=`<div class="warn">⚠<div><b>${S.noGeo.length} foto${S.noGeo.length>1?'s':''} sin GPS</b> — quedaron afuera. Es lo que pasa con las que pasaron por WhatsApp o Instagram. En la app real acá iría "decime en qué ciudad fueron" una sola vez.</div></div>`;
-  if(S.heic) w+=`<div class="warn">⚠<div><b>${S.heic} archivo${S.heic>1?'s':''} HEIC</b> — el navegador no los lee. La app real necesita decodificarlos o pedir JPEG.</div></div>`;
-  if(S.trips.length>1) w+=`<div class="warn">✦<div>Encontré <b>${S.trips.length} viajes</b> en estas fotos. Estoy mostrando el más grande; en la app real los listaría todos.</div></div>`;
-  $('#tripWarn').innerHTML=w;
+  /* Los carteles se cierran y no vuelven: avisan una vez y después son ruido
+     arriba del viaje. El descarte vive en memoria de la sesión, así que al
+     rearmarse el viaje no reaparecen. */
+  const avisos=[];
+  if(S.noGeo.length) avisos.push(['gps',`⚠<div><b>${S.noGeo.length} foto${S.noGeo.length>1?'s':''} sin GPS</b> — quedaron afuera. Es lo que pasa con las que pasaron por WhatsApp o Instagram. En la app real acá iría "decime en qué ciudad fueron" una sola vez.</div>`]);
+  if(S.heic) avisos.push(['heic',`⚠<div><b>${S.heic} archivo${S.heic>1?'s':''} HEIC</b> — el navegador no los lee. La app real necesita decodificarlos o pedir JPEG.</div>`]);
+  if(S.trips.length>1) avisos.push(['multi',`✦<div>Encontré <b>${S.trips.length} viajes</b> en estas fotos. Estoy mostrando el más grande; en la app real los listaría todos.</div>`]);
+  const wHost=$('#tripWarn');
+  wHost.innerHTML=avisos.filter(a=>!S.warnOff.has(a[0]))
+    .map(a=>`<div class="warn" data-w="${a[0]}">${a[1]}<button class="wx" title="Cerrar este aviso">✕</button></div>`).join('');
+  wHost.querySelectorAll('.wx').forEach(b=>b.onclick=()=>{
+    const d=b.closest('.warn'); S.warnOff.add(d.dataset.w); d.remove();
+  });
   // timeline
   const host=$('#timeline'); host.innerHTML='';
+  /* La lista del visor se arma mientras se arma el timeline: es el mismo orden
+     en el que uno las mira, y así pasar de largo cruza de ciudad sin cortarse. */
+  const LBL=[];
   const t0=new Date(new Date(P[0].from).setHours(0,0,0,0)).getTime();
   const dayOf=ts=>Math.round((new Date(new Date(ts).setHours(0,0,0,0)).getTime()-t0)/864e5)+1;
   S.tramos.forEach((t,i)=>{
@@ -1525,7 +1729,7 @@ function renderTrip(){
     if(t.mode==='fly'&&t.route){
       const r=t.route;
       const d=el('div','day fly',`<div class="dnum">${dshort(t.date)}</div>
-        <div class="flycard"><span class="em">✈️</span><span>${t.a.name} → ${t.b.name}<s>${r.legs.map(l=>l[0]).join(' · ')}${r.via?' (escala)':' (directo)'} · ${fmtN(r.km)} km${t.airline?' · '+t.airline:''}</s></span>
+        <div class="flycard"><span class="em">✈️</span><span>${t.a.name} → ${t.b.name}<s>${r.legs.map(l=>l[0]).join(' · ')}${viasOf(r).length?' ('+viasOf(r).length+(viasOf(r).length>1?' escalas)':' escala)'):' (directo)'} · ${fmtN(r.km)} km${t.airline?' · '+t.airline:''}</s></span>
         <span class="est">${t.manual?'corregido':t.mirror?'igual que la ida':t.confirmed?'confirmado':'estimado'}</span>
         <button class="pen">editar</button></div>`);
       d.querySelector('.pen').onclick=()=>editFlight(t);
@@ -1543,13 +1747,35 @@ function renderTrip(){
     const sec=el('div','day');
     sec.innerHTML=`<div class="dnum">Día ${da}${db>da?'–'+db:''} · ${dshort(d0)}${nd>1?' a '+dshort(d1):''}</div>
       <div class="dplace">${p.name}${p.cc?`, ${cname(p.cc)}`:''}</div>
-      <div class="dsub">${nd} día${nd>1?'s':''} · ${p.photos.length} fotos${p.pois.length?' · '+p.pois.length+' lugares reconocidos':''}</div>
-      ${p.pois.length?`<div class="pois">${p.pois.map(x=>`<span class="poi">📍 ${x}</span>`).join('')}</div>`:''}`;
+      <div class="dsub">${nd} día${nd>1?'s':''} · ${p.photos.length} fotos${p.pois.length?' · '+p.pois.length+' lugares':''}</div>
+      <div class="pois">${p.pois.map(x=>{
+        const mio=(p.mine||[]).includes(x);
+        return `<span class="poi${mio?' mine':''}">📍 ${esc(x)}${mio?`<button class="px" data-p="${esc(x)}" title="Sacar este lugar">✕</button>`:''}</span>`;
+      }).join('')}<button class="poiadd" type="button">+ agregar lugar o atracción</button></div>`;
+    /* El botón es sólo de la app: al escrito entra el nombre del lugar, nunca
+       la invitación a ponerlo. Lo que se copia queda limpio. */
+    sec.querySelector('.poiadd').onclick=e=>{
+      /* Se escribe en el lugar del botón en vez de en un prompt del navegador:
+         en el teléfono el prompt tapa la pantalla y se pierde el contexto. */
+      const b=e.currentTarget, inp=el('input','poinew');
+      inp.placeholder='Escribí el lugar y dale Enter';
+      b.replaceWith(inp); inp.focus();
+      inp.onkeydown=k=>{
+        if(k.key==='Enter') agregarLugar(p,inp.value);
+        else if(k.key==='Escape') renderTrip();
+      };
+      inp.onblur=()=>{ if(!inp.value.trim()) renderTrip() };
+    };
+    sec.querySelectorAll('.px').forEach(b=>b.onclick=()=>sacarLugar(p,b.dataset.p));
     const g=el('div','grid');
     bursts(p.photos).forEach(b=>{
+      /* Cada ráfaga entra entera en la lista del visor, y la miniatura abre en
+         la primera: así pasando de largo se ven todas las fotos del viaje. */
+      const desde=LBL.length;
+      b.forEach(ph=>LBL.push({url:ph.url,cap:p.name+' · '+dshort(new Date(ph.ts))}));
       const w=el('div','ph');
       const im=el('img'); im.src=b[0].url; im.loading='lazy';
-      im.onclick=()=>{$('#lbImg').src=b[0].url;$('#lb').classList.add('on')};
+      im.onclick=()=>openLb(LBL,desde);
       w.appendChild(im);
       if(b.length>1) w.appendChild(el('span','n','+'+(b.length-1)));
       /* La ráfaga se borra entera: son la misma foto sacada ocho veces, y
@@ -1563,6 +1789,26 @@ function renderTrip(){
   });
   writeProse();
   ['#nPanel','#nTrip','#nWrite','#nRec','#nNew'].forEach(s=>$(s).hidden=false);
+}
+/* Un lugar puesto a mano vale igual que uno reconocido: entra en la lista de la
+   ciudad, en el escrito y en lo que se copia. Se guarda contra el nombre que
+   puso el mapa para que aguante un rearmado del viaje. */
+function agregarLugar(p,texto){
+  const v=(texto||'').trim();
+  if(!v) return;
+  const k=p.auto||p.name;
+  const l=S.addPois[k]=S.addPois[k]||[];
+  if(!l.includes(v)) l.push(v);
+  if(!p.pois.includes(v)) p.pois.unshift(v);
+  if(!(p.mine||[]).includes(v)) p.mine=(p.mine||[]).concat([v]);
+  renderTrip(); guardar();
+}
+function sacarLugar(p,v){
+  const k=p.auto||p.name;
+  S.addPois[k]=(S.addPois[k]||[]).filter(x=>x!==v);
+  p.pois=p.pois.filter(x=>x!==v);
+  p.mine=(p.mine||[]).filter(x=>x!==v);
+  renderTrip(); guardar();
 }
 function bursts(ps){
   const out=[];
@@ -1729,14 +1975,15 @@ function writeProse(){
   const home=S.homeCity?esName(S.homeCity[0]):'casa';
   let rec=`${listo(uniq)} en ${days} días\n\n`;
   rec+=`Volví de un viaje de ${days} días por ${listo(uniq)}. Si estás pensando en hacer algo parecido, esto es lo que fue.\n\n`;
-  if(ida.route) rec+=`Salí de ${home} el ${dstr(ida.date)}${ida.route.via?`, con escala en ${ida.route.via[1].split(/[-\/]/)[0]}`:' en vuelo directo'}. ${fmtN(ida.route.km)} km, unas ${flyHours(ida.route.km).toFixed(0)} horas de vuelo.\n\n`;
+  if(ida.route) rec+=`Salí de ${home} el ${dstr(ida.date)}${viasOf(ida.route).length?`, con escala en ${viaTxt(ida.route)}`:' en vuelo directo'}. ${fmtN(ida.route.km)} km, unas ${flyHours(ida.route.km).toFixed(0)} horas de vuelo.\n\n`;
   const veredicto=n=>n===1?'Un día fue más una escala que una visita.'
     :n===2?'Con dos días ves lo esencial y poco más.'
     :n<=4?'Me alcanzó bien.':'Tuve tiempo de salirme de lo obvio.';
   P.forEach(p=>{
     rec+=`**${p.name}** — ${p.days.length} día${p.days.length>1?'s':''}\n`;
+    /* Si no hay lugares marcados no se escribe nada: un hueco con instrucciones
+       para rellenar es peor que el silencio, y esto se copia tal cual. */
     if(p.pois.length) rec+=`Lo que vi: ${listo(p.pois.slice(0,5))}. `;
-    else rec+=`Acá no tengo lugares marcados, así que completá vos. `;
     rec+=`${veredicto(p.days.length)}\n\n`;
   });
   const inner=S.tramos.slice(1,-1);
@@ -1800,7 +2047,7 @@ function renderRec(){
   const st=[[fmtN(km)+' km','distancia volada'],[(km/40075).toFixed(2),'vueltas al mundo'],[fl.length,'vuelos'],[hrs.toFixed(0)+' h','en el aire'],[aps.size,'aeropuertos'],[ctry.size,'países']];
   $('#recStats').innerHTML=st.map(s=>`<div class="stat"><b>${s[0]}</b><s>${s[1]}</s></div>`).join('');
   $('#recTbl').innerHTML=`<tr><th>Fecha</th><th>Ruta</th><th>Escala</th><th class="n">km</th><th class="n">h</th></tr>`+
-    fl.map(t=>`<tr><td>${dshort(t.date)}</td><td>${t.route.legs.map(l=>l[0]).join(' → ')}</td><td style="color:var(--tx3)">${t.route.via?t.route.via[1].split(/[-\/]/)[0]:'directo'}</td><td class="n">${fmtN(t.route.km)}</td><td class="n">${flyHours(t.route.km).toFixed(1)}</td></tr>`).join('');
+    fl.map(t=>`<tr><td>${dshort(t.date)}</td><td>${t.route.legs.map(l=>l[0]).join(' → ')}</td><td style="color:var(--tx3)">${viaTxt(t.route)||'directo'}</td><td class="n">${fmtN(t.route.km)}</td><td class="n">${flyHours(t.route.km).toFixed(1)}</td></tr>`).join('');
 }
 
 /* ============ PANEL ============
@@ -1843,28 +2090,132 @@ function panelMap(recs){
   });
   return {tramos,paradas};
 }
+/* Un viaje puede empezar en diciembre y terminar en enero, así que pertenece a
+   todos los años que toca: filtrar por 2026 tiene que mostrarlo igual. */
+function tripYears(r){
+  const [f,l]=tripSpan(r), out=[];
+  for(let y=f.getFullYear();y<=l.getFullYear();y++) out.push(y);
+  return out;
+}
+/* ---------- los detalles de cada tarjeta del panel ----------
+   Igna: "que al hacer click en cada tarjeta me dé detalles". Cada una devuelve
+   filas planas y un solo modal las dibuja: sumar una tarjeta nueva es sumar una
+   función, no una pantalla. */
+function filasVuelos(recs){
+  const out=[];
+  recs.forEach(r=>(r.tramos||[]).forEach(t=>{
+    if(t.mode!=='fly'||!t.route) return;
+    const rt=routeIn(t.route); if(!rt) return;
+    out.push({ts:+t.date, txt:rt.legs.map(l=>l[0]).join(' → '),
+      sub:`${t.a.name} → ${t.b.name} · ${dstr(new Date(+t.date))}${t.airline?' · '+t.airline:''}`,
+      val:fmtN(rt.km||0)+' km'});
+  }));
+  return out.sort((a,b)=>b.ts-a.ts);
+}
+function filasAeropuertos(recs){
+  const n={};
+  recs.forEach(r=>(r.tramos||[]).forEach(t=>{
+    if(t.mode!=='fly'||!t.route) return;
+    const rt=routeIn(t.route); if(!rt) return;
+    rt.legs.forEach(c=>{ const k=c[0]; (n[k]=n[k]||{a:c,v:0}).v++ });
+  }));
+  return Object.values(n).sort((a,b)=>b.v-a.v).map(o=>({
+    txt:o.a[0]+' — '+o.a[1], sub:cname(o.a[2]), val:o.v+(o.v===1?' vez':' veces')}));
+}
+function filasPaises(recs){
+  const n={};
+  recs.forEach(r=>{
+    const vistos=new Set();
+    r.paradas.forEach(p=>{ if(!p.cc) return;
+      const o=n[p.cc]=n[p.cc]||{viajes:0,ciudades:new Set(),dias:0};
+      o.ciudades.add(p.name); o.dias+=(p.days||[]).length;
+      if(!vistos.has(p.cc)){ vistos.add(p.cc); o.viajes++ }
+    });
+  });
+  return Object.entries(n).sort((a,b)=>b[1].dias-a[1].dias).map(([cc,o])=>({
+    txt:cname(cc), sub:[...o.ciudades].join(', '),
+    val:o.dias+' día'+(o.dias===1?'':'s')}));
+}
+function filasCiudades(recs){
+  const n={};
+  recs.forEach(r=>r.paradas.forEach(p=>{
+    const o=n[p.name]=n[p.name]||{cc:p.cc,dias:0,fotos:0,veces:0};
+    o.dias+=(p.days||[]).length; o.fotos+=(p.photoIds||[]).length; o.veces++;
+  }));
+  return Object.entries(n).sort((a,b)=>b[1].dias-a[1].dias).map(([name,o])=>({
+    txt:name, sub:(o.cc?cname(o.cc):'')+(o.veces>1?` · ${o.veces} veces`:'')+` · ${o.fotos} fotos`,
+    val:o.dias+' día'+(o.dias===1?'':'s')}));
+}
+function filasViajes(recs){
+  return recs.map(r=>{
+    const [f,l]=tripSpan(r), dias=Math.round((l-f)/864e5)+1;
+    const km=(r.tramos||[]).filter(t=>t.mode==='fly'&&t.route).reduce((s,t)=>s+(t.route.km||0),0);
+    return {txt:tripTitle(r), sub:`${dshort(f)} – ${dshort(l)} ${l.getFullYear()} · ${dias} día${dias>1?'s':''}`,
+            val:fmtN(km)+' km'};
+  });
+}
+const DETALLES={
+  vuelos:['Todos tus vuelos',filasVuelos,'Todavía no hay vuelos cargados.'],
+  aps:['Aeropuertos por los que pasaste',filasAeropuertos,'Todavía no pisaste ninguno.'],
+  ctry:['Países',filasPaises,'Todavía no hay países.'],
+  ciudades:['Ciudades y lugares',filasCiudades,'Todavía no hay ciudades.'],
+  viajes:['Tus viajes',filasViajes,'Todavía no cargaste viajes.']
+};
+function abrirDetalle(k,recs){
+  const d=DETALLES[k]; if(!d) return;
+  const filas=d[1](recs);
+  const c=el('div','dlist');
+  c.innerHTML=filas.length
+    ? filas.map(f=>`<div class="drow"><div><b>${esc(f.txt)}</b>${f.sub?`<s>${esc(f.sub)}</s>`:''}</div><span>${esc(f.val||'')}</span></div>`).join('')
+    : `<div class="empty">${d[2]}</div>`;
+  openEdit(c,d[0]+(S.pYear?' · '+S.pYear:''));
+}
 async function renderPanel(){
-  const recs=await listTrips();
+  const todos=await listTrips();
   const u=AUTH.user||{};
   $('#pHi').textContent=u.name?`Hola, ${u.name}`:'Tu bitácora';
+  /* El año es un filtro, no una pantalla aparte: todo lo de abajo se recalcula
+     con los viajes de ese año y el resto del panel no cambia de forma. */
+  const años=[...new Set(todos.flatMap(tripYears))].sort((a,b)=>b-a);
+  if(S.pYear&&!años.includes(S.pYear)) S.pYear=null;
+  const yh=$('#pYears');
+  yh.hidden=años.length<2;
+  yh.innerHTML=años.length<2?'':[['Todo',null],...años.map(y=>[String(y),y])]
+    .map(([t,v])=>`<button type="button" data-y="${v===null?'':v}"${(S.pYear||null)===v?' class="on"':''}>${t}</button>`).join('');
+  yh.querySelectorAll('button').forEach(b=>b.onclick=()=>{
+    S.pYear=b.dataset.y?+b.dataset.y:null; renderPanel();
+  });
+  const recs=S.pYear?todos.filter(r=>tripYears(r).includes(S.pYear)):todos;
   const st=lifeStats(recs);
   $('#pSub').innerHTML=recs.length
-    ? `<span>${st.viajes} viaje${st.viajes>1?'s':''}</span><s>·</s><span>${st.ciudades} lugares</span><s>·</s><span>${st.ctry} países</span>`
-    : '<span>Todavía no cargaste ningún viaje</span>';
-  $('#pStats').innerHTML=[[fmtN(st.km)+' km','volados'],[(st.km/40075).toFixed(2),'vueltas al mundo'],
-    [st.vuelos,'vuelos'],[st.hrs.toFixed(0)+' h','en el aire'],[st.aps,'aeropuertos']]
-    .map(s=>`<div class="stat"><b>${s[0]}</b><s>${s[1]}</s></div>`).join('');
+    ? `<span>${st.viajes} viaje${st.viajes>1?'s':''}${S.pYear?' en '+S.pYear:''}</span><s>·</s><span>${st.ciudades} lugar${st.ciudades===1?'':'es'}</span><s>·</s><span>${st.ctry} país${st.ctry===1?'':'es'}</span>`
+    : `<span>${S.pYear?'Ningún viaje en '+S.pYear:'Todavía no cargaste ningún viaje'}</span>`;
+  /* Cada tarjeta abre su lista. Las de kilómetros y horas abren los vuelos: es
+     de donde salen los números y es lo que uno quiere ver al tocarlas. */
+  const cards=[['km',fmtN(st.km)+' km','volados','vuelos'],
+    ['mundo',(st.km/40075).toFixed(2),'vueltas al mundo','vuelos'],
+    ['vuelos',st.vuelos,'vuelos','vuelos'],
+    ['hrs',st.hrs.toFixed(0)+' h','en el aire','vuelos'],
+    ['aps',st.aps,'aeropuertos','aps'],
+    ['ctry',st.ctry,'países','ctry'],
+    ['ciudades',st.ciudades,'ciudades','ciudades']];
+  $('#pStats').innerHTML=cards.map(c=>
+    `<button type="button" class="stat go" data-d="${c[3]}"><b>${c[1]}</b><s>${c[2]}</s></button>`).join('');
+  $('#pStats').querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>abrirDetalle(b.dataset.d,recs));
   const box=$('#pMapBox');
   if(recs.length){
     const {tramos,paradas}=panelMap(recs);
     box.hidden=false;
     /* El mapa del panel no tiene "casa del viaje": la casa es la del perfil. */
-    box.innerHTML=tramos.length?mapSVG(tramos,paradas,S.homeCity?S.home:null,null):'';
+    if(tramos.length) mapInto(box,mapSVG(tramos,paradas,S.homeCity?S.home:null,null),'');
+    else box.innerHTML='';
     box.hidden=!tramos.length;
   } else box.hidden=true;
   const host=$('#pTrips'); host.innerHTML='';
   if(!recs.length){
-    host.innerHTML=`<div class="empty">Cargá las fotos de un viaje y va a quedar guardado acá para siempre.<br>Podés volver a abrirlo, corregirle los vuelos o sumarle fotos cuando quieras.</div>`;
+    host.innerHTML=`<div class="empty">${S.pYear
+      ? 'No hay viajes de '+S.pYear+'. Tocá <b>Todo</b> para ver los demás.'
+      : 'Cargá las fotos de un viaje y va a quedar guardado acá para siempre.<br>Podés volver a abrirlo, corregirle los vuelos o sumarle fotos cuando quieras.'}</div>`;
     return;
   }
   for(const r of recs){
@@ -2034,7 +2385,7 @@ $('#nPanel').onclick=()=>irAlPanel();
    guardados siguen donde estaban. */
 function nuevoViaje(){
   S.photos=[];S.noGeo=[];S.trip=null;S.trips=[];S.tramos=[];S.ivIdx=0;
-  S.skipped=false;S.heic=0;S.tripId=null;S.title=null;S.createdAt=null;S.renames={};
+  S.skipped=false;S.heic=0;S.tripId=null;S.title=null;S.createdAt=null;S.renames={};S.addPois={};
   ['#nTrip','#nWrite','#nRec'].forEach(s=>$(s).hidden=true);
   $('#timeline').classList.remove('editing');
   show('vDrop');
@@ -2114,8 +2465,52 @@ document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
   S.tone=b.dataset.tone;paintProse()});
 $('#copyTxt').onclick=()=>{navigator.clipboard.writeText($('#prose').innerText);$('#copyTxt').textContent='Copiado ✓';setTimeout(()=>$('#copyTxt').textContent='Copiar texto',1400)};
 $('#seeShare').onclick=()=>{$('#shareWrap').hidden=false;sharePrev();$('#shareWrap').scrollIntoView&&$('#shareWrap').scrollIntoView({behavior:'smooth'})};
-$('#lbX').onclick=()=>$('#lb').classList.remove('on');
-$('#lb').onclick=e=>{if(e.target.id==='lb')$('#lb').classList.remove('on')};
+/* ============ VISOR DE FOTOS ============
+   Abrir una foto y quedarse ahí no sirve: uno abre una y sigue de largo. El
+   visor guarda la lista entera del viaje y la posición, así que pasar es mover
+   un índice. Las ráfagas entran completas: en la grilla se ven de a una para
+   no repetir, pero acá se quieren ver todas. */
+const LB={list:[],i:0};
+function openLb(list,i){
+  LB.list=list||[]; LB.i=i||0;
+  paintLb(); $('#lb').classList.add('on');
+}
+function paintLb(){
+  const n=LB.list.length; if(!n) return;
+  if(LB.i<0) LB.i=n-1; if(LB.i>=n) LB.i=0;
+  const f=LB.list[LB.i];
+  $('#lbImg').src=f.url;
+  $('#lbCap').textContent=f.cap||'';
+  $('#lbNum').textContent=n>1?LB.i+1+' de '+n:'';
+  const solo=n<2;
+  $('#lbPrev').hidden=solo; $('#lbNext').hidden=solo;
+}
+const lbGo=d=>{ LB.i+=d; paintLb() };
+const lbClose=()=>$('#lb').classList.remove('on');
+$('#lbX').onclick=lbClose;
+$('#lbPrev').onclick=e=>{e.stopPropagation();lbGo(-1)};
+$('#lbNext').onclick=e=>{e.stopPropagation();lbGo(1)};
+$('#lb').onclick=e=>{ if(e.target.id==='lb') lbClose() };
+/* El teclado en la compu y el dedo en el teléfono hacen lo mismo. */
+document.addEventListener('keydown',e=>{
+  if(!$('#lb').classList.contains('on')) return;
+  if(e.key==='Escape') lbClose();
+  else if(e.key==='ArrowLeft') lbGo(-1);
+  else if(e.key==='ArrowRight') lbGo(1);
+});
+(()=>{
+  let x0=null,y0=null;
+  const el0=$('#lb');
+  el0.addEventListener('touchstart',e=>{ const t=e.touches[0]; x0=t.clientX; y0=t.clientY },{passive:true});
+  el0.addEventListener('touchend',e=>{
+    if(x0==null) return;
+    const t=e.changedTouches[0], dx=t.clientX-x0, dy=t.clientY-y0;
+    x0=null;
+    /* Sólo si el gesto fue claramente horizontal: si no, era un scroll o un
+       toque y pasar de foto sería una sorpresa. */
+    if(Math.abs(dx)>44&&Math.abs(dx)>Math.abs(dy)*1.4) lbGo(dx<0?1:-1);
+  },{passive:true});
+})();
 
 </script>
 </body>
