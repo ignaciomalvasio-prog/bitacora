@@ -163,6 +163,27 @@ h2{font-size:13px;text-transform:uppercase;letter-spacing:.09em;color:var(--tx3)
 /* misc */
 .warn{background:#251c12;border:1px solid #453320;border-radius:11px;padding:13px 15px;font-size:13.5px;color:var(--ac2);display:flex;gap:10px;margin-bottom:16px}
 .warn div{color:#d8c4ae}
+/* ---------- modal de casa ----------
+   Es lo primero que se ve. Sin casa no hay viaje: no se puede cerrar
+   sin elegir una ciudad, por eso no tiene ✕. */
+.modal{position:fixed;inset:0;background:rgba(8,7,6,.86);backdrop-filter:blur(6px);z-index:120;
+  display:none;align-items:center;justify-content:center;padding:24px}
+.modal.on{display:flex}
+.mcard{background:var(--bg2);border:1px solid var(--line);border-radius:18px;padding:28px 26px;
+  width:100%;max-width:430px;box-shadow:0 24px 70px rgba(0,0,0,.55)}
+.mcard .em{font-size:26px;display:block;margin-bottom:12px}
+.mcard h2{font-size:21px;font-weight:640;letter-spacing:-.02em;margin-bottom:7px}
+.mcard>p{color:var(--tx2);font-size:14.5px;line-height:1.5;margin-bottom:20px}
+.mcard .fix{margin-top:0}
+.geo{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;color:var(--tx3)}
+.geo button{color:var(--sky);text-decoration:underline;font-size:13px}
+.geo button:disabled{color:var(--tx3);text-decoration:none;cursor:default}
+.mnote{margin-top:16px;font-size:12px;color:var(--tx3);line-height:1.45}
+/* el chip de casa arriba del drop */
+.homechip{display:inline-flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--line);
+  border-radius:999px;padding:6px 14px;font-size:13px;color:var(--tx2);margin-bottom:20px}
+.homechip button{color:var(--sky);text-decoration:underline;font-size:13px}
+
 .lb{position:fixed;inset:0;background:rgba(8,7,6,.94);z-index:99;display:none;align-items:center;justify-content:center;padding:30px}
 .lb.on{display:flex} .lb img{max-width:100%;max-height:100%;border-radius:10px}
 .lb b{position:absolute;top:20px;right:26px;font-size:26px;color:var(--tx2);cursor:pointer;font-weight:400}
@@ -211,6 +232,10 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:22px 0;color:var
   .rec{grid-template-columns:1fr 1fr}
 
   .lb{padding:14px} .lb b{top:12px;right:16px;font-size:32px;padding:6px}
+
+  .modal{padding:16px;align-items:flex-end} /* pegado al pulgar, no al centro */
+  .mcard{padding:24px 19px 26px;border-radius:18px}
+  .mcard h2{font-size:19.5px}
 }
 @media (max-width:380px){ .grid{grid-template-columns:repeat(2,1fr)} }
 /* respeta la barra de gestos del iPhone */
@@ -235,6 +260,7 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:22px 0;color:var
 <!-- 1. DROP -->
 <div id="vDrop" class="wrap">
   <div class="hero">
+    <div class="homechip" id="homeChip" hidden>🏠 Salís de <b id="chipName">—</b><button id="chipEdit">cambiar</button></div>
     <h1>Subí las fotos.<br>La bitácora <em>se arma sola</em>.</h1>
     <p>Detecta dónde estuviste, deduce los vuelos y te los pasa a confirmar de un toque. Vos no ordenás nada.</p>
     <div class="drop" id="drop">
@@ -258,23 +284,23 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:22px 0;color:var
   <div class="steps" id="steps"></div>
 </div>
 
-<!-- 3. HOME CONFIRM -->
-<div id="vHome" class="wrap" hidden>
-  <section class="iv">
-    <div class="ivhead"><h3>Una sola pregunta antes de empezar</h3>
-    <p>Necesito saber de dónde saliste para deducir los vuelos.</p></div>
-    <div class="fcard ask">
-      <div class="q">¿Tu casa está en <span id="homeName">—</span>?</div>
-      <div class="opts">
-        <button class="opt" id="homeYes"><span class="em">🏠</span><span><b>Sí, ahí vivo</b><s id="homeWhy">—</s></span></button>
-        <button class="opt" id="homeNo"><span class="em">✏️</span><span><b>No, es otra ciudad</b><s>La elijo de una lista</s></span></button>
+<!-- 3. MODAL DE CASA (lo primero que se ve) -->
+<div class="modal" id="homeModal">
+  <div class="mcard">
+    <span class="em">🏠</span>
+    <h2>¿Dónde es tu casa?</h2>
+    <p>Es el punto de partida: todo lo que esté lejos de acá cuenta como viaje, y desde acá se deducen los vuelos.</p>
+    <div class="fix">
+      <div>
+        <label>Ciudad donde vivís</label>
+        <input id="homeInput" list="cityList" placeholder="Escribí tu ciudad…" autocomplete="off" enterkeyhint="done">
+        <datalist id="cityList"></datalist>
+        <div class="geo"><button id="geoBtn">Usar mi ubicación</button><span id="geoMsg"></span></div>
       </div>
-      <div class="fix" id="homeFix" hidden>
-        <div><label>Ciudad donde vivís</label><input id="homeInput" list="cityList" placeholder="Escribí tu ciudad…" autocomplete="off"><datalist id="cityList"></datalist></div>
-        <button class="btn" id="homeSave">Guardar</button>
-      </div>
+      <button class="btn" id="homeSave">Listo</button>
     </div>
-  </section>
+    <p class="mnote">Queda guardada en este celular. Podés cambiarla cuando quieras.</p>
+  </div>
 </div>
 
 <!-- 4. INTERVIEW -->
@@ -497,12 +523,17 @@ async function ingest(files){
     alert(m); show('vDrop'); return;
   }
   S.photos.sort((a,b)=>a.ts-b.ts);
-  mark(1); await tick(); detectHome(); prog(.62);
+  /* Si ya dijo dónde vive, no hay nada que deducir ni que confirmar. */
+  mark(1); await tick(); if(!S.homeDeclared) detectHome(); prog(.62);
   mark(2); await tick(); buildTrips(); prog(.78);
+  if(!S.trip){
+    alert('Con tu casa en '+esName(S.homeCity[0])+' no me queda ningún viaje: todas las fotos caen cerca.\n\nSi te mudaste o elegiste mal la ciudad, cambiala y probá de nuevo.');
+    show('vDrop'); openHomeModal(false); return;
+  }
   mark(3); await tick(); tagPois(); prog(.9);
   mark(4); await tick(); buildTramos(); prog(1);
   await tick(200);
-  askHome();
+  show('vIv'); renderIv();
 }
 const tick=(ms=90)=>new Promise(r=>setTimeout(r,ms));
 
@@ -530,13 +561,60 @@ function detectHome(){
   S.homeDays=best.days; S.homeVisits=best.visits; S.homeSpan=Math.round(best.span);
   S.homeCity=nearCity(S.home[0],S.home[1]);
 }
-function askHome(){
-  const c=S.homeCity;
-  $('#homeName').textContent=c?`${c[0]}, ${cname(c[1])}`:'—';
-  $('#homeWhy').textContent = S.homeVisits>1
-    ? `Volviste ahí ${S.homeVisits} veces en ${S.homeSpan} días`
-    : `No estoy muy seguro: solo hay fotos de una vez. Corregime si me equivoqué.`;
-  show('vHome');
+/* La casa declarada gana siempre sobre la deducida: el usuario ya la dijo
+   al abrir la app, volver a preguntarle sería no haberlo escuchado. */
+const HOME_KEY='bitacora.casa';
+function setHome(c){
+  S.homeCity=c; S.home=[c[2],c[3]]; S.homeDeclared=true;
+  try{ localStorage.setItem(HOME_KEY,JSON.stringify(c)) }catch(e){}
+  paintChip();
+}
+function loadHome(){
+  try{
+    const raw=localStorage.getItem(HOME_KEY); if(!raw) return false;
+    const c=JSON.parse(raw);
+    if(!Array.isArray(c)||c.length<4||typeof c[2]!=='number') return false;
+    S.homeCity=c; S.home=[c[2],c[3]]; S.homeDeclared=true; return true;
+  }catch(e){ return false }
+}
+function paintChip(){
+  const chip=$('#homeChip'); if(!chip) return;
+  if(!S.homeCity){ chip.hidden=true; return }
+  $('#chipName').textContent=`${esName(S.homeCity[0])}, ${cname(S.homeCity[1])}`;
+  chip.hidden=false;
+}
+function fillCityList(){
+  const dl=$('#cityList'); if(!dl||dl.children.length) return;
+  dl.innerHTML=CITIES.slice(0,2500).map(c=>`<option value="${esName(c[0])}, ${cname(c[1])}">`).join('');
+}
+function openHomeModal(auto){
+  fillCityList();
+  $('#geoMsg').textContent='';
+  $('#homeInput').value=S.homeCity?`${esName(S.homeCity[0])}, ${cname(S.homeCity[1])}`:'';
+  $('#homeModal').classList.add('on');
+  /* La ubicación se propone sola solo la primera vez: si venís a cambiarla,
+     volver a pedir permiso sería molestar por algo que ya decidiste. */
+  if(auto&&!S.homeCity) askGeo(true);
+}
+function closeHomeModal(){ $('#homeModal').classList.remove('on') }
+function askGeo(silent){
+  const msg=$('#geoMsg');
+  if(!navigator.geolocation){ if(!silent) msg.textContent='Tu navegador no sabe ubicarte.'; return }
+  msg.textContent='Buscando…';
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const c=nearCity(pos.coords.latitude,pos.coords.longitude);
+    if(!c){ msg.textContent='No encontré una ciudad cerca. Escribila a mano.'; return }
+    $('#homeInput').value=`${esName(c[0])}, ${cname(c[1])}`;
+    msg.textContent='Si no es esta, cambiala.';
+  },()=>{ msg.textContent='No pude ubicarte. Escribí tu ciudad.' },{timeout:8000,maximumAge:6e5});
+}
+/* El input muestra los nombres en español ("Múnich") pero CITIES los guarda
+   en inglés: hay que buscar por las dos puntas o falla toda ciudad traducida. */
+function findCity(raw){
+  const v=(raw||'').split(',')[0].trim().toLowerCase();
+  if(!v) return null;
+  return CITIES.find(c=>c[0].toLowerCase()===v||esName(c[0]).toLowerCase()===v)
+      || CITIES.find(c=>esName(c[0]).toLowerCase().startsWith(v));
 }
 
 /* ---------- trips & paradas ---------- */
@@ -944,11 +1022,14 @@ function runDemo(){
     }
   });
   S.photos=photos.sort((a,b)=>a.ts-b.ts);S.noGeo=[];S.heic=0;
-  detectHome();buildTrips();tagPois();buildTramos();askHome();
+  /* El ejemplo sale de Córdoba sí o sí: son fotos inventadas, no tiene
+     sentido medirlas contra la casa real de quien está probando. */
+  detectHome();buildTrips();tagPois();buildTramos();
+  show('vIv');renderIv();
 }
 
 /* ============ nav & wiring ============ */
-const VIEWS=['vDrop','vLoad','vHome','vIv','vTrip','vWrite','vRec'];
+const VIEWS=['vDrop','vLoad','vIv','vTrip','vWrite','vRec'];
 function show(v){VIEWS.forEach(x=>$('#'+x).hidden=(x!==v));window.scrollTo(0,0);
   [['#nTrip','vTrip'],['#nWrite','vWrite'],['#nRec','vRec']].forEach(([s,t])=>$(s).classList.toggle('on',t===v));}
 /* En el celular no hay nada que arrastrar: cambiamos el texto.
@@ -968,18 +1049,25 @@ dz.addEventListener('drop',e=>{const f=[...e.dataTransfer.files];if(f.length)ing
 document.addEventListener('dragover',e=>e.preventDefault());
 document.addEventListener('drop',e=>e.preventDefault());
 
-$('#homeYes').onclick=()=>{ S.tramos.length?null:buildTramos(); show('vIv'); renderIv() };
-$('#homeNo').onclick=()=>{ $('#homeFix').hidden=false;
-  $('#cityList').innerHTML=CITIES.slice(0,2500).map(c=>`<option value="${c[0]}, ${cname(c[1])}">`).join('') };
+/* ---- modal de casa ---- */
+$('#geoBtn').onclick=()=>askGeo(false);
 $('#homeSave').onclick=()=>{
-  const v=$('#homeInput').value.split(',')[0].trim().toLowerCase();
-  const c=CITIES.find(x=>x[0].toLowerCase()===v);
-  if(!c) return alert('No encontré esa ciudad en la lista.');
-  S.homeCity=c;S.home=[c[2],c[3]];
-  buildTrips();tagPois();buildTramos();
-  if(!S.trip) return alert('Con esa casa no queda ningún viaje. Probá otra.');
-  show('vIv');renderIv();
+  const c=findCity($('#homeInput').value);
+  if(!c) return alert('No encontré esa ciudad. Empezá a escribirla y elegila de la lista.');
+  setHome(c);
+  closeHomeModal();
+  /* Si ya había fotos cargadas, cambiar la casa rearma todo el viaje. */
+  if(S.photos.length){
+    buildTrips();
+    if(!S.trip){ alert('Con esa casa no queda ningún viaje. Probá otra.'); return openHomeModal(false) }
+    tagPois();buildTramos();S.ivIdx=0;S.skipped=false;show('vIv');renderIv();
+  }
 };
+$('#homeInput').addEventListener('keydown',e=>{ if(e.key==='Enter'){e.preventDefault();$('#homeSave').click()} });
+$('#chipEdit').onclick=()=>openHomeModal(false);
+/* Lo primero que ve alguien que abre la app: la pregunta de la casa.
+   Si ya la contestó otra vez, va derecho a las fotos. */
+if(loadHome()) paintChip(); else openHomeModal(true);
 $('#skipAll').onclick=()=>{S.skipped=true;S.tramos.forEach(t=>{if(t.mode==='ask'&&!t.orig){t.orig='fly';t.mode='fly'}});finishIv()};
 $('#nTrip').onclick=()=>{show('vTrip')};
 $('#nWrite').onclick=()=>{show('vWrite');paintProse()};
