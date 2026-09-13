@@ -177,9 +177,26 @@ h2{font-size:13px;text-transform:uppercase;letter-spacing:.09em;color:var(--tx3)
   text-transform:none;color:var(--tx)}
 .mcard>p{color:var(--tx2);font-size:14.5px;line-height:1.5;margin-bottom:20px}
 .mcard .fix{margin-top:0}
-.geo{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;color:var(--tx3)}
-.geo button{color:var(--sky);text-decoration:underline;font-size:13px}
-.geo button:disabled{color:var(--tx3);text-decoration:none;cursor:default}
+/* buscador de ciudad: lista propia y no <datalist>, que en el celular
+   casi nunca se abre y además sólo puede mostrar la base local. */
+.sbox{position:relative}
+.sug{position:absolute;left:0;right:0;top:calc(100% + 5px);z-index:5;background:var(--bg3);
+  border:1px solid var(--line);border-radius:11px;overflow-y:auto;max-height:234px;
+  box-shadow:0 16px 38px rgba(0,0,0,.55);display:none;-webkit-overflow-scrolling:touch}
+.sug.on{display:block}
+.sug div{padding:11px 13px;font-size:14.5px;cursor:pointer;border-bottom:1px solid var(--line);
+  display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.sug div:last-child{border-bottom:0}
+.sug div:hover{background:var(--bg2)}
+.sug div.msg{color:var(--tx3);font-size:12.5px;cursor:default;justify-content:flex-start}
+.sug div.msg:hover{background:none}
+.sug s{color:var(--tx3);font-size:12.5px;text-decoration:none;text-align:right}
+/* el botón de ubicación va grande y se toca: el permiso del navegador sólo
+   aparece si sale de un gesto del usuario, nunca al cargar la página. */
+.geob{width:100%;margin-top:10px;background:var(--bg3);border:1px solid var(--line);color:var(--tx);
+  padding:12px;border-radius:9px;font:inherit;font-size:14.5px}
+.geob:disabled{color:var(--tx3)}
+.geom{margin-top:8px;font-size:12.5px;color:var(--tx3);line-height:1.45}
 .mnote{margin-top:16px;font-size:12px;color:var(--tx3);line-height:1.45}
 /* el chip de casa arriba del drop */
 .homechip{display:inline-flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--line);
@@ -238,6 +255,9 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:22px 0;color:var
   .modal{padding:16px;align-items:flex-end} /* pegado al pulgar, no al centro */
   .mcard{padding:24px 19px 26px;border-radius:18px}
   .mcard h2{font-size:19.5px}
+  .sug div{padding:13px} /* el dedo necesita 44px de alto, el mouse no */
+  .sug{max-height:min(46vh,300px)}
+  .geob{padding:13px;font-size:15px}
 }
 @media (max-width:380px){ .grid{grid-template-columns:repeat(2,1fr)} }
 /* respeta la barra de gestos del iPhone */
@@ -293,15 +313,19 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:22px 0;color:var
     <h2>¿Dónde es tu casa?</h2>
     <p>Es el punto de partida: todo lo que esté lejos de acá cuenta como viaje, y desde acá se deducen los vuelos.</p>
     <div class="fix">
+      <div class="sbox">
+        <label>Ciudad o pueblo donde vivís</label>
+        <input id="homeInput" placeholder="Empezá a escribir…" autocomplete="off" autocorrect="off"
+               autocapitalize="words" spellcheck="false" enterkeyhint="done">
+        <div class="sug" id="citySug"></div>
+      </div>
       <div>
-        <label>Ciudad donde vivís</label>
-        <input id="homeInput" list="cityList" placeholder="Escribí tu ciudad…" autocomplete="off" enterkeyhint="done">
-        <datalist id="cityList"></datalist>
-        <div class="geo"><button id="geoBtn">Usar mi ubicación</button><span id="geoMsg"></span></div>
+        <button class="geob" id="geoBtn">📍 Usar mi ubicación</button>
+        <div class="geom" id="geoMsg"></div>
       </div>
       <button class="btn" id="homeSave">Listo</button>
     </div>
-    <p class="mnote">Queda guardada en este celular. Podés cambiarla cuando quieras.</p>
+    <p class="mnote">Sirve cualquier pueblo, no sólo las ciudades grandes. Queda guardada en este celular y la podés cambiar cuando quieras.</p>
   </div>
 </div>
 
@@ -530,7 +554,7 @@ async function ingest(files){
   mark(2); await tick(); buildTrips(); prog(.78);
   if(!S.trip){
     alert('Con tu casa en '+esName(S.homeCity[0])+' no me queda ningún viaje: todas las fotos caen cerca.\n\nSi te mudaste o elegiste mal la ciudad, cambiala y probá de nuevo.');
-    show('vDrop'); openHomeModal(false); return;
+    show('vDrop'); openHomeModal(); return;
   }
   mark(3); await tick(); tagPois(); prog(.9);
   mark(4); await tick(); buildTramos(); prog(1);
@@ -582,41 +606,128 @@ function loadHome(){
 function paintChip(){
   const chip=$('#homeChip'); if(!chip) return;
   if(!S.homeCity){ chip.hidden=true; return }
-  $('#chipName').textContent=`${esName(S.homeCity[0])}, ${cname(S.homeCity[1])}`;
+  $('#chipName').textContent=cityLabel(S.homeCity);
   chip.hidden=false;
 }
-function fillCityList(){
-  const dl=$('#cityList'); if(!dl||dl.children.length) return;
-  dl.innerHTML=CITIES.slice(0,2500).map(c=>`<option value="${esName(c[0])}, ${cname(c[1])}">`).join('');
-}
-function openHomeModal(auto){
-  fillCityList();
-  $('#geoMsg').textContent='';
-  $('#homeInput').value=S.homeCity?`${esName(S.homeCity[0])}, ${cname(S.homeCity[1])}`:'';
-  $('#homeModal').classList.add('on');
-  /* La ubicación se propone sola solo la primera vez: si venís a cambiarla,
-     volver a pedir permiso sería molestar por algo que ya decidiste. */
-  if(auto&&!S.homeCity) askGeo(true);
-}
-function closeHomeModal(){ $('#homeModal').classList.remove('on') }
-function askGeo(silent){
-  const msg=$('#geoMsg');
-  if(!navigator.geolocation){ if(!silent) msg.textContent='Tu navegador no sabe ubicarte.'; return }
-  msg.textContent='Buscando…';
-  navigator.geolocation.getCurrentPosition(pos=>{
-    const c=nearCity(pos.coords.latitude,pos.coords.longitude);
-    if(!c){ msg.textContent='No encontré una ciudad cerca. Escribila a mano.'; return }
-    $('#homeInput').value=`${esName(c[0])}, ${cname(c[1])}`;
-    msg.textContent='Si no es esta, cambiala.';
-  },()=>{ msg.textContent='No pude ubicarte. Escribí tu ciudad.' },{timeout:8000,maximumAge:6e5});
-}
+
+/* ---------- buscador de ciudades ----------
+   La base local trae 11.000 ciudades: sobra para las grandes y no alcanza
+   para un pueblo. Cuando el nombre no está, se le pregunta a OpenStreetMap.
+   Una ciudad es [nombre, país, lat, lon, población, paísEnEspañol, provincia]. */
+const norm=s=>(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+const cityLabel=c=>`${esName(c[0])}, ${c[5]||cname(c[1])}`;
 /* El input muestra los nombres en español ("Múnich") pero CITIES los guarda
    en inglés: hay que buscar por las dos puntas o falla toda ciudad traducida. */
-function findCity(raw){
-  const v=(raw||'').split(',')[0].trim().toLowerCase();
-  if(!v) return null;
-  return CITIES.find(c=>c[0].toLowerCase()===v||esName(c[0]).toLowerCase()===v)
-      || CITIES.find(c=>esName(c[0]).toLowerCase().startsWith(v));
+function searchLocal(q){
+  const v=norm(q); if(v.length<2) return [];
+  const out=[];
+  for(const c of CITIES){
+    const a=norm(c[0]), b=norm(esName(c[0]));
+    const r = (a===v||b===v) ? 0 : (a.startsWith(v)||b.startsWith(v)) ? 1
+            : (a.includes(v)||b.includes(v)) ? 2 : -1;
+    if(r>=0) out.push([r,c]);
+  }
+  out.sort((x,y)=>x[0]-y[0] || y[1][4]-x[1][4]);
+  return out.slice(0,6).map(x=>x[1]);
+}
+/* Sólo lugares donde se puede vivir: sin este filtro el buscador
+   contesta con calles, bares y paradas de colectivo. */
+const OSM_OK={city:1,town:1,village:1,hamlet:1,municipality:1,suburb:1,borough:1,county:1,state:1,administrative:1};
+function osmToCity(r){
+  if(!r||!r.lat) return null;
+  const a=r.address||{};
+  const name=a.city||a.town||a.village||a.hamlet||a.municipality||a.suburb||r.name||(r.display_name||'').split(',')[0];
+  if(!name) return null;
+  const cc=(a.country_code||'').toUpperCase();
+  return [name,cc,+r.lat,+r.lon,0,a.country||cname(cc),a.state||''];
+}
+const OSM='https://nominatim.openstreetmap.org/';
+/* Las respuestas viejas no pueden pisar a las nuevas: si escribís rápido,
+   la búsqueda de hace tres letras vuelve después y te cambia la lista. */
+let osmSeq=0;
+function searchOsm(q,cb){
+  if(typeof fetch!=='function') return cb([]);
+  const mine=++osmSeq;
+  fetch(OSM+'search?format=jsonv2&addressdetails=1&limit=8&accept-language=es&q='+encodeURIComponent(q))
+    .then(r=>r.json())
+    .then(j=>{ if(mine!==osmSeq) return;
+      cb((Array.isArray(j)?j:[]).filter(r=>OSM_OK[r.addresstype]).map(osmToCity).filter(Boolean)) })
+    .catch(()=>{ if(mine===osmSeq) cb([]) });
+}
+function reverseOsm(lat,lon,cb){
+  if(typeof fetch!=='function') return cb(null);
+  fetch(OSM+'reverse?format=jsonv2&addressdetails=1&zoom=12&accept-language=es&lat='+lat+'&lon='+lon)
+    .then(r=>r.json()).then(j=>cb(osmToCity(j))).catch(()=>cb(null));
+}
+
+/* La lista de sugerencias es propia y no un <datalist>: en el celular el
+   datalist casi nunca se abre, y encima sólo puede mostrar la base local. */
+let sugList=[], sugTimer=0, chosen=null;
+function renderSug(list,msg){
+  const box=$('#citySug'); if(!box) return;
+  sugList=list||[];
+  const rows=sugList.map((c,i)=>
+    `<div data-i="${i}"><span>${esc(esName(c[0]))}</span><s>${esc(c[6]?c[6]+' · ':'')}${esc(c[5]||cname(c[1]))}</s></div>`).join('');
+  const foot=msg?`<div class="msg">${esc(msg)}</div>`:'';
+  box.innerHTML=rows+foot;
+  box.classList.toggle('on',!!(rows||foot));
+}
+function hideSug(){ const b=$('#citySug'); if(b){b.classList.remove('on');b.innerHTML='';} sugList=[] }
+function pickCity(i){
+  const c=sugList[i]; if(!c) return;
+  chosen=c; $('#homeInput').value=cityLabel(c); hideSug(); $('#geoMsg').textContent='';
+}
+function onCityType(){
+  const q=$('#homeInput').value;
+  chosen=null; clearTimeout(sugTimer);
+  if(norm(q).length<2){ hideSug(); return }
+  const loc=searchLocal(q);
+  renderSug(loc,'Buscando…');
+  /* Se pregunta afuera aunque la base local haya contestado: "Jesús María"
+     existe, pero acá sólo está Córdoba, que es la ciudad grande de al lado. */
+  sugTimer=setTimeout(()=>searchOsm(q,rem=>{
+    const seen=new Set(loc.map(c=>norm(c[0])+c[1]));
+    const all=loc.concat(rem.filter(c=>!seen.has(norm(c[0])+c[1]))).slice(0,8);
+    renderSug(all, all.length?'' : 'No encontré ningún lugar con ese nombre.');
+  }),550);
+}
+
+function openHomeModal(){
+  chosen=S.homeCity||null;
+  $('#geoMsg').textContent='';
+  geoIdle();
+  $('#homeInput').value=S.homeCity?cityLabel(S.homeCity):'';
+  hideSug();
+  $('#homeModal').classList.add('on');
+}
+function closeHomeModal(){ hideSug(); $('#homeModal').classList.remove('on') }
+const GEO_LABEL='📍 Usar mi ubicación';
+function geoIdle(){ const b=$('#geoBtn'); if(b){ b.disabled=false; b.textContent=GEO_LABEL } }
+/* El permiso de ubicación sólo se le pide al navegador desde un toque del
+   usuario: pedirlo solo al abrir la página se descarta sin mostrar nada. */
+function askGeo(){
+  const msg=$('#geoMsg'), btn=$('#geoBtn');
+  const done=t=>{ geoIdle(); msg.textContent=t };
+  if(!navigator.geolocation) return done('Este navegador no sabe ubicarte. Escribí tu ciudad arriba.');
+  if(typeof isSecureContext!=='undefined'&&!isSecureContext) return done('La ubicación sólo funciona en https.');
+  btn.disabled=true; btn.textContent='Ubicando…';
+  msg.textContent='El navegador te va a preguntar si permitís la ubicación: tocá "Permitir".';
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const la=pos.coords.latitude, lo=pos.coords.longitude;
+    /* La base local devolvería la ciudad grande más cercana; si vivís en un
+       pueblo eso es directamente mentirte. Se pregunta cómo se llama. */
+    reverseOsm(la,lo,c=>{
+      const f=c||nearCity(la,lo);
+      if(!f) return done('Te ubiqué, pero no reconocí la ciudad. Escribila arriba.');
+      chosen=f; $('#homeInput').value=cityLabel(f); hideSug();
+      done('Te ubiqué en '+esName(f[0])+'. Si no es esta, escribí la tuya arriba.');
+    });
+  },err=>{
+    done(err&&err.code===1
+      ? 'No diste permiso a la ubicación. Podés habilitarla desde el candado 🔒 de la barra de direcciones, o escribir tu ciudad arriba.'
+      : 'No pude ubicarte ahora. Escribí tu ciudad arriba.');
+  },{enableHighAccuracy:false,timeout:12000,maximumAge:3e5});
 }
 
 /* ---------- trips & paradas ---------- */
@@ -1052,24 +1163,43 @@ document.addEventListener('dragover',e=>e.preventDefault());
 document.addEventListener('drop',e=>e.preventDefault());
 
 /* ---- modal de casa ---- */
-$('#geoBtn').onclick=()=>askGeo(false);
-$('#homeSave').onclick=()=>{
-  const c=findCity($('#homeInput').value);
-  if(!c) return alert('No encontré esa ciudad. Empezá a escribirla y elegila de la lista.');
-  setHome(c);
-  closeHomeModal();
+$('#geoBtn').onclick=()=>askGeo();
+$('#homeInput').addEventListener('input',onCityType);
+$('#homeInput').addEventListener('focus',()=>{ if(!chosen) onCityType() });
+/* mousedown y no click: el click llega después del blur y la lista ya no está */
+$('#citySug').addEventListener('mousedown',e=>{
+  const row=e.target.closest('[data-i]'); if(!row) return;
+  e.preventDefault(); pickCity(+row.dataset.i);
+});
+function commitHome(c){
+  setHome(c); closeHomeModal();
   /* Si ya había fotos cargadas, cambiar la casa rearma todo el viaje. */
   if(S.photos.length){
     buildTrips();
-    if(!S.trip){ alert('Con esa casa no queda ningún viaje. Probá otra.'); return openHomeModal(false) }
+    if(!S.trip){ alert('Con esa casa no queda ningún viaje. Probá otra.'); return openHomeModal() }
     tagPois();buildTramos();S.ivIdx=0;S.skipped=false;show('vIv');renderIv();
   }
+}
+$('#homeSave').onclick=()=>{
+  const raw=$('#homeInput').value, btn=$('#homeSave');
+  if(chosen) return commitHome(chosen);
+  const loc=searchLocal(raw)[0];
+  if(loc) return commitHome(loc);
+  if(norm(raw).length<2) return alert('Escribí la ciudad donde vivís.');
+  /* Escribió un pueblo y apretó Listo sin tocar la lista: lo buscamos igual
+     en vez de mandarlo a empezar de nuevo. */
+  btn.disabled=true; btn.textContent='Buscando…';
+  searchOsm(raw,rem=>{
+    btn.disabled=false; btn.textContent='Listo';
+    if(!rem.length) return alert('No encontré "'+raw+'".\n\nProbá con el nombre completo (por ejemplo "Jesús María, Córdoba") o tocá "Usar mi ubicación".');
+    commitHome(rem[0]);
+  });
 };
 $('#homeInput').addEventListener('keydown',e=>{ if(e.key==='Enter'){e.preventDefault();$('#homeSave').click()} });
-$('#chipEdit').onclick=()=>openHomeModal(false);
+$('#chipEdit').onclick=()=>openHomeModal();
 /* Lo primero que ve alguien que abre la app: la pregunta de la casa.
    Si ya la contestó otra vez, va derecho a las fotos. */
-if(loadHome()) paintChip(); else openHomeModal(true);
+if(loadHome()) paintChip(); else openHomeModal();
 $('#skipAll').onclick=()=>{S.skipped=true;S.tramos.forEach(t=>{if(t.mode==='ask'&&!t.orig){t.orig='fly';t.mode='fly'}});finishIv()};
 $('#nTrip').onclick=()=>{show('vTrip')};
 $('#nWrite').onclick=()=>{show('vWrite');paintProse()};
