@@ -142,6 +142,27 @@ h2{font-size:13px;text-transform:uppercase;letter-spacing:.09em;color:var(--tx3)
 .flycard .em{font-size:17px}
 .flycard s{text-decoration:none;color:var(--tx3);font-size:12.5px;display:block}
 .flycard .est{margin-left:auto;font-size:11px;color:var(--tx3);border:1px solid var(--line);padding:2px 7px;border-radius:20px;flex-shrink:0}
+/* editar un vuelo: el lápiz va pegado al estado, que es lo que te hace dudar */
+.flycard .pen{font-size:12.5px;color:var(--sky);border:1px solid var(--line);padding:3px 9px;
+  border-radius:20px;flex-shrink:0;background:none;font:inherit;font-size:12px}
+.flycard .pen:hover{border-color:var(--sky)}
+#tActs{margin-bottom:6px}
+/* sacar fotos es un modo, no un botón por foto: así no hay 300 ✕ a la vista */
+.ph .x{display:none;position:absolute;top:5px;right:5px;width:26px;height:26px;border-radius:50%;
+  background:rgba(8,7,6,.78);border:1px solid var(--line);color:#fff;align-items:center;
+  justify-content:center;font-size:13px;z-index:2;padding:0}
+#timeline.editing .ph .x{display:flex}
+#timeline.editing .grid img{opacity:.7}
+.plist{display:grid;gap:8px;max-height:40vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.prow{display:flex;gap:8px;align-items:center}
+.prow input{flex:1;min-width:0;background:var(--bg3);border:1px solid var(--line);color:var(--tx);
+  padding:9px 11px;border-radius:9px;font:inherit;font-size:14px}
+.prow button{flex:none;background:none;border:1px solid var(--line);color:var(--tx3);
+  border-radius:9px;padding:8px 11px;font:inherit;font-size:13px}
+.prow s{text-decoration:none;color:var(--tx3);font-size:11.5px;flex:none}
+.danger{color:#e08672;border-color:#5c2c23}
+.mx{position:absolute;top:14px;right:16px;font-size:20px;color:var(--tx3);line-height:1;background:none}
+.mcard{position:relative}
 
 /* escrito */
 .tabs{display:flex;gap:6px;margin-bottom:14px}
@@ -203,6 +224,29 @@ h2{font-size:13px;text-transform:uppercase;letter-spacing:.09em;color:var(--tx3)
   border-radius:999px;padding:6px 14px;font-size:13px;color:var(--tx2);margin-bottom:20px}
 .homechip button{color:var(--sky);text-decoration:underline;font-size:13px}
 
+/* ---------- entrar y panel ---------- */
+.authcard{max-width:420px;text-align:left;padding:26px 24px}
+.authcard label{display:block;font-size:12.5px;color:var(--tx3);margin-bottom:6px}
+.authcard label s{text-decoration:none;opacity:.7}
+.authcard input{width:100%;background:var(--bg3);border:1px solid var(--line);color:var(--tx);
+  padding:12px;border-radius:9px;font:inherit;font-size:14.5px}
+.authcard .btn{width:100%}
+.phead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+.pacts{display:flex;gap:8px;flex-shrink:0}
+/* cada viaje es una fila que se toca entera, no un botón escondido adentro */
+.tripcard{display:flex;gap:14px;align-items:center;background:var(--bg2);border:1px solid var(--line);
+  border-radius:13px;padding:12px;margin-bottom:10px;cursor:pointer;text-align:left;width:100%}
+.tripcard:hover{border-color:var(--tx3)}
+.tripcard .tc{width:74px;height:74px;border-radius:9px;object-fit:cover;flex-shrink:0;background:var(--bg3)}
+.tripcard .ti{flex:1;min-width:0}
+.tripcard .ti b{display:block;font-size:16.5px;margin-bottom:3px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tripcard .ti s{display:block;text-decoration:none;color:var(--tx3);font-size:12.5px;line-height:1.5}
+.tripcard .tk{flex-shrink:0;text-align:right;color:var(--tx2);font-size:12.5px}
+.tripcard .tk b{display:block;font-size:17px;color:var(--tx)}
+.empty{background:var(--bg2);border:1px dashed var(--line);border-radius:13px;padding:30px 20px;
+  text-align:center;color:var(--tx3);font-size:14px;line-height:1.6}
+
 .lb{position:fixed;inset:0;background:rgba(8,7,6,.94);z-index:99;display:none;align-items:center;justify-content:center;padding:30px}
 .lb.on{display:flex} .lb img{max-width:100%;max-height:100%;border-radius:10px}
 .lb b{position:absolute;top:20px;right:26px;font-size:26px;color:var(--tx2);cursor:pointer;font-weight:400}
@@ -255,6 +299,13 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:22px 0;color:var
   .modal{padding:16px;align-items:flex-end} /* pegado al pulgar, no al centro */
   .mcard{padding:24px 19px 26px;border-radius:18px}
   .mcard h2{font-size:19.5px}
+  .authcard input{padding:13px 12px;font-size:16px} /* 16px evita el zoom de iOS */
+  .phead{align-items:flex-start} .pacts{width:100%} .pacts .btn{flex:1}
+  #tActs{flex-wrap:wrap} #tActs .btn{flex:1 1 auto}
+  .ph .x{width:30px;height:30px;font-size:15px} /* el dedo no acierta 26px */
+  .prow input{font-size:16px}
+  .tripcard .tc{width:60px;height:60px}
+  .tripcard .ti b{font-size:15.5px}
   .sug div{padding:13px} /* el dedo necesita 44px de alto, el mouse no */
   .sug{max-height:min(46vh,300px)}
   .geob{padding:13px;font-size:15px}
@@ -272,6 +323,7 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:22px 0;color:var
 <header><div class="hbar">
   <div class="logo">✦ Bit<b>á</b>cora <span class="tag">prototipo</span></div>
   <div class="nav">
+    <button id="nPanel" hidden>Panel</button>
     <button id="nTrip" class="on" hidden>Viaje</button>
     <button id="nWrite" hidden>Escrito</button>
     <button id="nRec" hidden>Tus vuelos</button>
@@ -279,8 +331,62 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:22px 0;color:var
   </div>
 </div></header>
 
+<!-- 0. ENTRAR -->
+<div id="vAuth" class="wrap">
+  <div class="hero">
+    <h1>Tu bitácora<br><em>te espera adentro</em>.</h1>
+    <p>Entrá y tenés tus viajes, tus vuelos y tu récord en un solo lugar, viaje tras viaje.</p>
+    <div class="card authcard">
+      <label>¿Cómo te llamás?</label>
+      <input id="auName" placeholder="Igna" autocomplete="given-name" enterkeyhint="go">
+      <label style="margin-top:12px">Email <s>(opcional)</s></label>
+      <input id="auMail" type="email" placeholder="vos@mail.com" autocomplete="email" enterkeyhint="go">
+      <button class="btn" id="auGo" style="margin-top:16px">Entrar</button>
+      <p class="mnote" id="auNote">Por ahora tu cuenta vive en este dispositivo: no hay servidor todavía, así que no te pedimos contraseña en vez de inventarte una que no protegería nada. Tus viajes quedan guardados acá y podés bajarte un respaldo cuando quieras.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 0b. PANEL -->
+<div id="vPanel" class="wrap" hidden>
+  <section>
+    <div class="phead">
+      <div><h1 id="pHi">Hola</h1><div class="tmeta" id="pSub"></div></div>
+      <div class="pacts">
+        <button class="btn sm" id="pNew">Nuevo viaje</button>
+        <button class="btn ghost sm" id="pProf">Tu perfil</button>
+      </div>
+    </div>
+    <div class="stats" id="pStats"></div>
+    <div class="mapbox" id="pMapBox"></div>
+  </section>
+  <section>
+    <h2>Tus viajes</h2>
+    <div id="pTrips"></div>
+  </section>
+</div>
+
+<!-- 0c. PERFIL -->
+<div class="modal" id="profModal">
+  <div class="mcard">
+    <span class="em">🧭</span>
+    <h2>Tu perfil</h2>
+    <p>Lo que sabemos de vos y lo que llevás volado.</p>
+    <div class="fix">
+      <div><label>Nombre</label><input id="prName"></div>
+      <div><label>Email</label><input id="prMail" type="email" placeholder="opcional"></div>
+      <div><label>Casa</label><button class="geob" id="prHome">—</button></div>
+      <button class="btn" id="prSave">Guardar</button>
+      <div class="rec" id="prStats" style="margin-top:4px"></div>
+      <button class="btn ghost" id="prExport">Bajar un respaldo</button>
+      <button class="btn ghost" id="prOut">Cerrar sesión</button>
+    </div>
+    <p class="mnote">Cerrar sesión borra tu perfil de este dispositivo pero no toca tus viajes. Bajate el respaldo antes si vas a borrar los datos del navegador.</p>
+  </div>
+</div>
+
 <!-- 1. DROP -->
-<div id="vDrop" class="wrap">
+<div id="vDrop" class="wrap" hidden>
   <div class="hero">
     <div class="homechip" id="homeChip" hidden>🏠 Salís de <b id="chipName">—</b><button id="chipEdit">cambiar</button></div>
     <h1>Subí las fotos.<br>La bitácora <em>se arma sola</em>.</h1>
@@ -349,9 +455,19 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:22px 0;color:var
     <div class="thead"><h1 id="tTitle">—</h1><div class="tmeta" id="tMeta"></div></div>
     <div class="stats" id="tStats"></div>
     <div class="mapbox" id="tMapBox"></div>
+    <!-- Editar no está escondido en un menú: cambiar algo es tan normal como mirarlo. -->
+    <div class="pacts" id="tActs">
+      <button class="btn ghost sm" id="tEdit">Editar el viaje</button>
+      <button class="btn ghost sm" id="tAdd">Agregar fotos</button>
+      <button class="btn ghost sm" id="tDel">Sacar fotos</button>
+    </div>
+    <input type="file" id="addFile" multiple accept="image/*,.heic,.heif,.jpg,.jpeg" hidden>
   </section>
   <section><h2>El viaje, día por día</h2><div id="timeline"></div></section>
 </div>
+
+<!-- 5b. EDITAR: un solo modal que aloja la tarjeta que haga falta -->
+<div class="modal" id="editModal"><div class="mcard" id="editHost"></div></div>
 
 <!-- 6. ESCRITO -->
 <div id="vWrite" class="wrap" hidden>
@@ -540,7 +656,173 @@ function mirrorFrom(ref,list){
 }
 
 /* ---------- state ---------- */
-const S={photos:[],noGeo:[],home:null,homeCity:null,trip:null,trips:[],tramos:[],ivIdx:0,tone:'rec',skipped:false};
+const S={photos:[],noGeo:[],home:null,homeCity:null,trip:null,trips:[],tramos:[],ivIdx:0,tone:'rec',skipped:false,
+         title:null,renames:{}};
+
+/* ============ ALMACENAMIENTO ============
+   Los viajes viven en IndexedDB, en este dispositivo. La API de acá abajo es
+   a propósito chica y asíncrona: el día que haya servidor se reemplazan estas
+   funciones y el resto del programa no se entera de nada. */
+const DB_NAME='bitacora', DB_VER=1;
+let dbP=null;
+function db(){
+  if(dbP) return dbP;
+  return dbP=new Promise((ok,bad)=>{
+    if(typeof indexedDB==='undefined') return bad(new Error('sin indexedDB'));
+    const r=indexedDB.open(DB_NAME,DB_VER);
+    r.onupgradeneeded=()=>{
+      const d=r.result;
+      if(!d.objectStoreNames.contains('meta')) d.createObjectStore('meta',{keyPath:'k'});
+      if(!d.objectStoreNames.contains('trips')) d.createObjectStore('trips',{keyPath:'id'});
+      if(!d.objectStoreNames.contains('photos')) d.createObjectStore('photos',{keyPath:'id'}).createIndex('tripId','tripId');
+    };
+    r.onsuccess=()=>ok(r.result); r.onerror=()=>bad(r.error);
+  });
+}
+const rq=r=>new Promise((ok,bad)=>{r.onsuccess=()=>ok(r.result);r.onerror=()=>bad(r.error)});
+/* Una transacción por operación a propósito: IndexedDB cierra la transacción
+   apenas la cola de microtasks se vacía, así que un await adentro la mata. */
+const dbPut=async(s,v)=>{const d=await db();return rq(d.transaction(s,'readwrite').objectStore(s).put(v))};
+const dbGet=async(s,k)=>{const d=await db();return rq(d.transaction(s,'readonly').objectStore(s).get(k))};
+const dbAll=async s=>{const d=await db();return rq(d.transaction(s,'readonly').objectStore(s).getAll())};
+const dbDel=async(s,k)=>{const d=await db();return rq(d.transaction(s,'readwrite').objectStore(s).delete(k))};
+const dbBy=async(s,i,k)=>{const d=await db();return rq(d.transaction(s,'readonly').objectStore(s).index(i).getAll(k))};
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+
+/* Las fotos originales no entran: un viaje son cientos de MB y el navegador
+   empieza a borrar solo. Guardamos una miniatura, que es lo que se mira. */
+function thumbOf(src,max=460){
+  return new Promise(res=>{
+    /* Una imagen que no carga ni falla (pasa: formato raro, blob vencido)
+       dejaría el guardado colgado para siempre. Se la da por perdida. */
+    let listo=false;
+    const ok=v=>{ if(listo)return; listo=true; clearTimeout(t); res(v) };
+    const t=setTimeout(()=>ok(null),6000);
+    try{
+      const im=new Image();
+      im.onload=()=>{ try{
+        const w=im.width||max, h=im.height||max, s=Math.min(1,max/Math.max(w,h));
+        const c=document.createElement('canvas');
+        c.width=Math.max(1,Math.round(w*s)); c.height=Math.max(1,Math.round(h*s));
+        c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+        ok(c.toDataURL('image/jpeg',.72));
+      }catch(e){ ok(null) } };
+      im.onerror=()=>ok(null);
+      im.src=src;
+    }catch(e){ ok(null) }
+  });
+}
+
+/* Del aeropuerto guardamos sólo el IATA: pesa nada, y si mañana arreglamos la
+   base de aeropuertos los viajes viejos se arreglan solos. */
+const apOut=a=>a?a[0]:null;
+const apIn=c=>c?byIata(c)||null:null;
+function routeOut(r){ return r?{legs:r.legs.map(apOut),km:r.km,via:apOut(r.via)}:null }
+function routeIn(o){
+  if(!o) return null;
+  const legs=(o.legs||[]).map(apIn).filter(Boolean);
+  if(legs.length<2) return null;
+  return {legs,km:o.km!=null?o.km:legKms(legs).reduce((a,b)=>a+b,0),via:apIn(o.via)};
+}
+function tripOut(){
+  const T=S.trip;
+  return {
+    id:S.tripId||(S.tripId=uid()),
+    title:S.title||null,
+    createdAt:S.createdAt||(S.createdAt=Date.now()),
+    updatedAt:Date.now(),
+    home:S.home, homeCity:S.homeCity, noGeo:S.noGeo.length, heic:S.heic||0,
+    renames:S.renames||{},
+    paradas:T.paradas.map(p=>({name:p.name,auto:p.auto||p.name,cc:p.cc,c:p.c,from:p.from,to:p.to,days:p.days,pois:p.pois||[],
+                               photoIds:p.photos.map(x=>x.id)})),
+    tramos:S.tramos.map(t=>({a:{name:t.a.name,cc:t.a.cc,c:t.a.c,home:!!t.a.home},
+                             b:{name:t.b.name,cc:t.b.cc,c:t.b.c,home:!!t.b.home},
+                             km:t.km,mode:t.mode,orig:t.orig,route:routeOut(t.route),
+                             date:+t.date,confirmed:!!t.confirmed,manual:!!t.manual,
+                             mirror:!!t.mirror,airline:t.airline||''}))
+  };
+}
+async function saveTrip(){
+  if(!S.trip) return null;
+  const rec=tripOut();
+  await dbPut('trips',rec);
+  return rec.id;
+}
+/* Reconstruye el estado vivo a partir de lo guardado. Las paradas vuelven a
+   apuntar a los objetos de foto reales, que es lo que espera todo el render. */
+async function openTrip(id){
+  const rec=await dbGet('trips',id); if(!rec) return false;
+  const phs=(await dbBy('photos','tripId',id)).sort((a,b)=>a.ts-b.ts);
+  const byId={}; phs.forEach(p=>{ p.url=p.thumb||p.url; byId[p.id]=p });
+  S.tripId=rec.id; S.title=rec.title; S.createdAt=rec.createdAt;
+  S.home=rec.home; S.homeCity=rec.homeCity; S.heic=rec.heic||0; S.renames=rec.renames||{};
+  S.photos=phs; S.noGeo=[];
+  const paradas=rec.paradas.map(p=>({...p,photos:(p.photoIds||[]).map(i=>byId[i]).filter(Boolean)}))
+                           .filter(p=>p.photos.length);
+  if(!paradas.length) return false;
+  S.trip={photos:phs,paradas}; S.trips=[S.trip];
+  S.tramos=rec.tramos.map(t=>({...t,route:routeIn(t.route),date:new Date(t.date),needsCard:t.mode!=='ground'}));
+  /* Los extremos de cada tramo tienen que SER las paradas, no copias suyas: el
+     timeline dibuja las fotos de cada lugar a partir de t.b, y una copia no las
+     tiene. Sin esto el viaje se reabre sin una sola foto. */
+  const hc=S.homeCity;
+  const homeNode={name:hc?esName(hc[0]):'casa',cc:hc?hc[1]:'',c:S.home,home:true};
+  const nodes=[homeNode,...paradas,homeNode];
+  if(S.tramos.length===nodes.length-1) S.tramos.forEach((t,i)=>{ t.a=nodes[i]; t.b=nodes[i+1] });
+  else {
+    /* Si alguna parada se cayó (fotos que no llegaron a guardarse) se atan por
+       nombre: peor que por posición, pero mejor que un viaje sin fotos. */
+    const byName={}; paradas.forEach(p=>byName[p.name]=p);
+    S.tramos.forEach(t=>{
+      if(!t.a.home&&byName[t.a.name]) t.a=byName[t.a.name];
+      if(!t.b.home&&byName[t.b.name]) t.b=byName[t.b.name];
+    });
+  }
+  S.ivIdx=-1; S.skipped=true;
+  return true;
+}
+async function listTrips(){
+  const ts=await dbAll('trips');
+  return ts.sort((a,b)=>(b.paradas[0]?.from||0)-(a.paradas[0]?.from||0));
+}
+async function deleteTrip(id){
+  const phs=await dbBy('photos','tripId',id);
+  for(const p of phs) await dbDel('photos',p.id);
+  await dbDel('trips',id);
+}
+/* Guarda las fotos del viaje en curso (miniaturas) y las ata al viaje. */
+async function savePhotos(id,onProg){
+  for(let i=0;i<S.photos.length;i++){
+    const p=S.photos[i];
+    if(!p.id) p.id=uid();
+    if(p.saved) continue;
+    const th=p.thumb||await thumbOf(p.url);
+    await dbPut('photos',{id:p.id,tripId:id,name:p.name,ts:p.ts,lat:p.lat,lon:p.lon,thumb:th});
+    p.thumb=th; p.saved=true;
+    if(onProg) onProg((i+1)/S.photos.length);
+  }
+}
+
+/* ============ SESIÓN ============
+   Hoy la cuenta vive en este dispositivo: no hay servidor al que pedirle una
+   contraseña, y una contraseña que valida el propio navegador no protege de
+   nada, así que no la pedimos y no mentimos diciendo que sí. Cuando haya
+   servidor, se reemplazan estas cuatro funciones y listo. */
+const AUTH={
+  user:null,
+  get remote(){ return false },
+  async load(){ return this.user=(await dbGet('meta','perfil'))||null },
+  async signIn(name,email){
+    const u={k:'perfil',name:(name||'').trim(),email:(email||'').trim(),since:Date.now()};
+    if(!u.name) throw new Error('Falta el nombre');
+    await dbPut('meta',u); return this.user=u;
+  },
+  async update(patch){
+    const u={...(this.user||{k:'perfil',since:Date.now()}),...patch,k:'perfil'};
+    await dbPut('meta',u); return this.user=u;
+  },
+  async signOut(){ await dbDel('meta','perfil'); this.user=null; }
+};
 
 /* ---------- ingest ---------- */
 async function ingest(files){
@@ -551,23 +833,13 @@ async function ingest(files){
   const mark=i=>{rows.forEach((r,j)=>{r.className=j<i?'done':j===i?'now':'';if(j<i)r.querySelector('s').textContent='●'});};
   const prog=p=>$('#barI').style.width=(p*100)+'%';
   mark(0);
-  const imgs=[...files].filter(f=>/^image\//.test(f.type)||/\.(jpe?g|heic|png)$/i.test(f.name));
-  const heic=imgs.filter(f=>/\.heic$/i.test(f.name)).length;
-  S.photos=[];S.noGeo=[];
-  for(let i=0;i<imgs.length;i++){
-    const f=imgs[i];
-    const buf=await f.slice(0,256*1024).arrayBuffer();
-    const ex=readExif(buf)||{};
-    const ts=ex.ts||f.lastModified;
-    const rec={name:f.name,ts,lat:ex.lat,lon:ex.lon,size:f.size,url:URL.createObjectURL(f)};
-    if(ex.lat==null||isNaN(ex.lat)) S.noGeo.push(rec); else S.photos.push(rec);
-    if(i%6===0){prog(i/imgs.length*.5);await new Promise(r=>setTimeout(r))}
-  }
-  S.heic=heic;
+  const r=await leerFotos(files,p=>prog(p*.5));
+  const heic=r.heic;
+  S.photos=r.ok; S.noGeo=r.sin; S.heic=heic;
   prog(.5);
   if(!S.photos.length){
     /* En el celular no hay consola: el mensaje tiene que decir qué pasó. */
-    let m='Leí '+imgs.length+' foto'+(imgs.length===1?'':'s')+' y ninguna trajo GPS.\n\n';
+    let m='Leí '+r.total+' foto'+(r.total===1?'':'s')+' y ninguna trajo GPS.\n\n';
     if(heic) m+=heic+' son HEIC: de ese formato todavía no sé leer la ubicación. Probá pasando el iPhone a "Más compatible" en Ajustes > Cámara > Formatos.\n\n';
     m+='El GPS también se pierde cuando la foto pasó por WhatsApp o Instagram, o si tenías la ubicación de la cámara apagada.\n\nProbá con el viaje de ejemplo para ver el flujo.';
     alert(m); show('vDrop'); return;
@@ -822,7 +1094,11 @@ function paradas(ps){
   for(const p of out){
     p.c=[p.photos.reduce((s,x)=>s+x.lat,0)/p.photos.length, p.photos.reduce((s,x)=>s+x.lon,0)/p.photos.length];
     const ct=nearCity(p.c[0],p.c[1]);
-    p.name=ct?esName(ct[0]):'Sin nombre'; p.cc=ct?ct[1]:''; p.from=p.photos[0].ts; p.to=p.photos.at(-1).ts;
+    /* `auto` es el nombre que puso el mapa; `name` puede ser el que pusiste vos.
+       Se guardan los dos: el tuyo tiene que sobrevivir a rearmar el viaje. */
+    p.auto=ct?esName(ct[0]):'Sin nombre';
+    p.name=(S.renames&&S.renames[p.auto])||p.auto;
+    p.cc=ct?ct[1]:''; p.from=p.photos[0].ts; p.to=p.photos.at(-1).ts;
     p.days=[...new Set(p.photos.map(x=>dkey(new Date(x.ts))))];
   }
   // unir paradas consecutivas de la misma ciudad
@@ -975,25 +1251,38 @@ function flightCard(t){
   c.querySelector('[data-a=fix]').onclick=()=>{c.replaceWith(fixCard(t))};
   return c;
 }
-function fixCard(t){
+/* `after` existe porque esta misma tarjeta se usa en dos lados: durante la
+   entrevista vuelve a la entrevista, y desde el viaje ya armado vuelve al
+   viaje. Sin esto habría dos copias de la misma pantalla. */
+function fixCard(t,after){
+  after=after||(()=>renderIv());
   const c=el('div','fcard ask');
   const oNear=airportsNear(t.a.c[0],t.a.c[1]).slice(0,6), dNear=airportsNear(t.b.c[0],t.b.c[1]).slice(0,6);
-  const cur=t.route.legs;
+  const cur=t.route?t.route.legs:[nearAirport(t.a.c[0],t.a.c[1]),nearAirport(t.b.c[0],t.b.c[1])];
   if(!oNear.find(a=>a[0]===cur[0][0]))oNear.unshift(cur[0]);
   if(!dNear.find(a=>a[0]===cur.at(-1)[0]))dNear.unshift(cur.at(-1));
   const viaOpts=HUBS.filter(h=>h[0]!==cur[0][0]&&h[0]!==cur.at(-1)[0])
     .map(h=>({h,d:hav([cur[0][3],cur[0][4]],[h[3],h[4]])+hav([h[3],h[4]],[cur.at(-1)[3],cur.at(-1)[4]])}))
     .sort((a,b)=>a.d-b.d).slice(0,14).map(o=>o.h);
   const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-  c.innerHTML=`<div class="q" style="margin-bottom:6px">Corregir el vuelo</div>
+  c.innerHTML=`<div class="q" style="margin-bottom:6px">${t.mode==='ground'?'Fue en avión, no por tierra':'Corregir el vuelo'}<div style="font-size:13px;font-weight:400;color:var(--tx3);margin-top:4px">${esc(t.a.name)} → ${esc(t.b.name)}</div></div>
    <div class="fix">
     <div><label>Fecha de salida</label><input type="date" id="fD" value="${iso(t.date)}"></div>
     <div><label>Sale de</label><select id="fO">${oNear.map(a=>`<option value="${a[0]}"${a[0]===cur[0][0]?' selected':''}>${a[0]} — ${a[1]}</option>`).join('')}</select></div>
-    <div><label>Escala</label><select id="fV"><option value="">Directo, sin escala</option>${viaOpts.map(a=>`<option value="${a[0]}"${t.route.via&&t.route.via[0]===a[0]?' selected':''}>${a[0]} — ${a[1]}</option>`).join('')}</select></div>
+    <div><label>Escala</label><select id="fV"><option value="">Directo, sin escala</option>${viaOpts.map(a=>`<option value="${a[0]}"${t.route&&t.route.via&&t.route.via[0]===a[0]?' selected':''}>${a[0]} — ${a[1]}</option>`).join('')}</select></div>
     <div><label>Llega a</label><select id="fT">${dNear.map(a=>`<option value="${a[0]}"${a[0]===cur.at(-1)[0]?' selected':''}>${a[0]} — ${a[1]}</option>`).join('')}</select></div>
     <div><label>Aerolínea (opcional)</label><input id="fA" placeholder="Air France…" value="${t.airline||''}"></div>
     <button class="btn" id="fS">Guardar y confirmar</button>
+    ${t.mode==='ground'?'':'<button class="btn ghost" id="fG">No fue en avión — fue por tierra</button>'}
    </div>`;
+  /* Pasar un tramo a tierra lo saca del récord de vuelos. Es una corrección
+     manual como cualquier otra: no se vuelve a preguntar ni se re-estima. */
+  const gnd=c.querySelector('#fG');
+  if(gnd) gnd.onclick=()=>{
+    t.mode='ground'; t.orig='train'; t.route=null; t.airline='';
+    t.confirmed=true; t.manual=true; t.mirror=false; t.needsCard=false;
+    after();
+  };
   c.querySelector('#fS').onclick=()=>{
     const O=byIata(c.querySelector('#fO').value), Dst=byIata(c.querySelector('#fT').value), V=byIata(c.querySelector('#fV').value);
     const legs=V?[O,V,Dst]:[O,Dst];
@@ -1002,13 +1291,48 @@ function fixCard(t){
     t.date=new Date(y,m-1,d,10,0);
     t.airline=c.querySelector('#fA').value.trim();
     t.confirmed=true;t.manual=true;t.mirror=false;
+    /* Corregir a mano implica que sí fue en avión, aunque hubiera quedado en
+       "ask" o lo hubieras pasado a tierra antes. */
+    t.mode='fly';t.orig='fly';t.needsCard=true;
     /* Si corregís la ida, la vuelta se corrige sola: es el mismo pasaje. */
     mirrorFrom(t);
-    renderIv();
+    after();
   };
   return c;
 }
-function finishIv(){ $('#cardHost').innerHTML=''; renderTrip(); show('vTrip'); }
+/* ---------- editar desde el viaje ya armado ----------
+   El modal es uno solo y lo que cambia es lo que se le mete adentro: dos
+   pantallas de corrección que se desincronizan es el peor resultado posible. */
+function openEdit(node,title){
+  const host=$('#editHost');
+  host.innerHTML='<button class="mx" id="edX">✕</button>';
+  if(title) host.appendChild(el('h2','',title));
+  host.appendChild(node);
+  $('#edX').onclick=closeEdit;
+  $('#editModal').classList.add('on');
+}
+function closeEdit(){ $('#editModal').classList.remove('on'); $('#editHost').innerHTML='' }
+/* Tocar el ✕ o el fondo cierra; tocar la tarjeta, no. */
+function editFlight(t){
+  openEdit(fixCard(t,()=>{ closeEdit(); renderTrip(); guardar() }));
+}
+function finishIv(){ $('#cardHost').innerHTML=''; renderTrip(); show('vTrip'); guardar(); }
+/* Guardar no es un botón: si terminaste la entrevista, el viaje ya es tuyo.
+   Un botón de guardar sólo sirve para que alguna vez te olvides de tocarlo. */
+let guardando=null;
+function guardar(){
+  if(!S.trip) return Promise.resolve(null);
+  /* Si se toca dos veces seguidas (confirmás y editás rápido), encolamos:
+     dos escrituras en paralelo dejan el viaje a medio guardar. */
+  return guardando=(guardando||Promise.resolve()).then(async()=>{
+    try{
+      const id=S.tripId||(S.tripId=uid());
+      await savePhotos(id);
+      await saveTrip();
+      return id;
+    }catch(e){ console.warn('no pude guardar',e); return null }
+  });
+}
 
 /* ============ TRIP ============ */
 function renderTrip(){
@@ -1018,8 +1342,8 @@ function renderTrip(){
   const flights=S.tramos.filter(t=>t.mode==='fly'&&t.route);
   const km=flights.reduce((s,t)=>s+t.route.km,0);
   const countries=[...new Set(P.map(p=>p.cc).filter(Boolean))];
-  const names=P.map(p=>p.name), uniq=[...new Set(names)];
-  $('#tTitle').textContent = uniq.length<=3? uniq.join(' · ') : `${uniq[0]} y ${uniq.length-1} lugares más`;
+  const uniq=[...new Set(P.map(p=>p.name))];
+  $('#tTitle').textContent = S.title||autoTitle();
   $('#tMeta').innerHTML=`<span>${dshort(first)} – ${dshort(last)} ${last.getFullYear()}</span><s>·</s><span>${days} días</span><s>·</s><span>${countries.map(cname).join(', ')}</span>`;
   const st=[[days,'días'],[uniq.length,'lugares'],[T.photos.length,'fotos'],[flights.length,'vuelos'],[fmtN(km),'km volados']];
   $('#tStats').innerHTML=st.map(s=>`<div class="stat"><b>${s[0]}</b><s>${s[1]}</s></div>`).join('');
@@ -1038,12 +1362,18 @@ function renderTrip(){
     const p=t.b;
     if(t.mode==='fly'&&t.route){
       const r=t.route;
-      host.appendChild(el('div','day fly',`<div class="dnum">${dshort(t.date)}</div>
+      const d=el('div','day fly',`<div class="dnum">${dshort(t.date)}</div>
         <div class="flycard"><span class="em">✈️</span><span>${t.a.name} → ${t.b.name}<s>${r.legs.map(l=>l[0]).join(' · ')}${r.via?' (escala)':' (directo)'} · ${fmtN(r.km)} km${t.airline?' · '+t.airline:''}</s></span>
-        <span class="est">${t.manual?'corregido':t.mirror?'igual que la ida':t.confirmed?'confirmado':'estimado'}</span></div>`));
+        <span class="est">${t.manual?'corregido':t.mirror?'igual que la ida':t.confirmed?'confirmado':'estimado'}</span>
+        <button class="pen">editar</button></div>`);
+      d.querySelector('.pen').onclick=()=>editFlight(t);
+      host.appendChild(d);
     } else if(t.mode==='ground'&&i>0&&i<S.tramos.length-1){
-      host.appendChild(el('div','day fly',`<div class="dnum">${dshort(t.date)}</div>
-        <div class="flycard"><span class="em">🚆</span><span>${t.a.name} → ${t.b.name}<s>${fmtN(t.km)} km por tierra</s></span></div>`));
+      const d=el('div','day fly',`<div class="dnum">${dshort(t.date)}</div>
+        <div class="flycard"><span class="em">🚆</span><span>${t.a.name} → ${t.b.name}<s>${fmtN(t.km)} km por tierra</s></span>
+        <button class="pen">editar</button></div>`);
+      d.querySelector('.pen').onclick=()=>editFlight(t);
+      host.appendChild(d);
     }
     if(!p||p.home||!p.photos) return;
     const d0=new Date(p.from), d1=new Date(p.to);
@@ -1060,12 +1390,17 @@ function renderTrip(){
       im.onclick=()=>{$('#lbImg').src=b[0].url;$('#lb').classList.add('on')};
       w.appendChild(im);
       if(b.length>1) w.appendChild(el('span','n','+'+(b.length-1)));
+      /* La ráfaga se borra entera: son la misma foto sacada ocho veces, y
+         borrarlas de a una sería ocho toques para un solo arrepentimiento. */
+      const x=el('button','x','✕');
+      x.onclick=e=>{ e.stopPropagation(); quitarFotos(b) };
+      w.appendChild(x);
       g.appendChild(w);
     });
     sec.appendChild(g); host.appendChild(sec);
   });
   writeProse();
-  ['#nTrip','#nWrite','#nRec','#nNew'].forEach(s=>$(s).hidden=false);
+  ['#nPanel','#nTrip','#nWrite','#nRec','#nNew'].forEach(s=>$(s).hidden=false);
 }
 function bursts(ps){
   const out=[];
@@ -1075,6 +1410,148 @@ function bursts(ps){
     else out.push([p]);
   }
   return out;
+}
+
+/* ============ EDITAR UN VIAJE GUARDADO ============
+   Todo lo de acá abajo existe por una razón sola: un viaje no se termina de
+   contar el día que subís las fotos. Aparecen más fotos, te acordás de que la
+   escala fue otra, el pueblo tiene un nombre que no es el que dice el mapa. */
+
+/* La identidad de una foto es su nombre más su hora: no hay ids hasta que se
+   guarda, y la misma carpeta se vuelve a elegir todo el tiempo. */
+const phKey=p=>p.name+'|'+p.ts;
+const tramoKey=t=>t.a.name+' > '+t.b.name;
+
+/* Lee la metadata de un lote de fotos. Lo usan la carga inicial y el agregado:
+   dos lectores de EXIF distintos se desincronizan el día que se toque uno. */
+async function leerFotos(files,onProg){
+  const imgs=[...files].filter(f=>/^image\//.test(f.type)||/\.(jpe?g|heic|png)$/i.test(f.name));
+  const heic=imgs.filter(f=>/\.heic$/i.test(f.name)).length;
+  const ok=[],sin=[];
+  for(let i=0;i<imgs.length;i++){
+    const f=imgs[i];
+    const buf=await f.slice(0,256*1024).arrayBuffer();
+    const ex=readExif(buf)||{};
+    const rec={name:f.name,ts:ex.ts||f.lastModified,lat:ex.lat,lon:ex.lon,size:f.size,url:URL.createObjectURL(f)};
+    (ex.lat==null||isNaN(ex.lat)?sin:ok).push(rec);
+    if(i%6===0){ if(onProg)onProg(i/imgs.length); await tick(0) }
+  }
+  return {ok,sin,heic,total:imgs.length};
+}
+
+/* Rearma el viaje después de tocar las fotos, sin perder lo que corregiste a
+   mano: si el salto entre los dos mismos lugares sigue existiendo, lo que
+   dijiste vos vale más que lo que yo deduzca. */
+function rearmar(){
+  const manuales=S.tramos.filter(t=>t.manual);
+  const antes=new Set((S.trip?S.trip.photos:[]).map(phKey));
+  buildTrips();
+  /* Agregar fotos puede partir el viaje en dos o descubrir otro: seguimos en
+     el que estábamos, no en el más grande, que es lo que elige buildTrips. */
+  if(S.trips.length>1&&antes.size){
+    const suyas=t=>t.photos.filter(p=>antes.has(phKey(p))).length;
+    S.trip=S.trips.slice().sort((a,b)=>suyas(b)-suyas(a))[0];
+  }
+  if(!S.trip){ S.tramos=[]; return false }
+  tagPois(); buildTramos();
+  manuales.forEach(m=>{
+    const t=S.tramos.find(x=>tramoKey(x)===tramoKey(m));
+    if(!t) return;
+    t.route=m.route; t.mode=m.mode; t.orig=m.orig; t.airline=m.airline; t.date=m.date;
+    t.confirmed=true; t.manual=true; t.mirror=false; t.needsCard=m.mode!=='ground';
+  });
+  /* Y si la ida sigue corregida, la vuelta se vuelve a espejar. */
+  S.tramos.filter(t=>t.manual).forEach(t=>mirrorFrom(t));
+  return true;
+}
+/* Después de rearmar puede haber tramos nuevos sin confirmar. No se muestran
+   solos en el viaje: se preguntan, que es lo mismo que hace la carga inicial. */
+function trasRearmar(){
+  if(S.tramos.some(t=>t.needsCard&&!t.confirmed)){ show('vIv'); renderIv(); return }
+  S.ivIdx=-1; renderTrip(); show('vTrip'); guardar();
+}
+
+async function agregarFotos(files){
+  const b=$('#tAdd'), lbl=b.textContent;
+  b.disabled=true; b.textContent='Leyendo…';
+  try{
+    const r=await leerFotos(files);
+    const vistas=new Set(S.photos.concat(S.noGeo).map(phKey));
+    const nuevas=r.ok.filter(p=>!vistas.has(phKey(p)));
+    S.noGeo.push(...r.sin.filter(p=>!vistas.has(phKey(p))));
+    S.heic=(S.heic||0)+r.heic;
+    if(!nuevas.length){
+      let m=r.total?'De esas '+r.total+' fotos no me sirve ninguna nueva.\n\n':'No encontré fotos ahí.\n\n';
+      if(r.ok.length) m+='Ya las tenía todas en este viaje.\n\n';
+      if(r.sin.length) m+=r.sin.length+' no traen GPS, así que no sé dónde ubicarlas.\n\n';
+      if(r.heic) m+=r.heic+' son HEIC: de ese formato todavía no sé leer la ubicación.';
+      return alert(m.trim());
+    }
+    S.photos=S.photos.concat(nuevas).sort((a,b)=>a.ts-b.ts);
+    if(!rearmar()) return alert('Con esas fotos no me queda ningún viaje armado. Volvé a abrirlo desde el panel.');
+    trasRearmar();
+    alert('Agregué '+nuevas.length+' foto'+(nuevas.length>1?'s':'')+'.'+
+          (r.sin.length?'\n\n'+r.sin.length+' quedaron afuera por no traer GPS.':''));
+  }catch(e){ alert('No pude leer esas fotos: '+e.message) }
+  finally{ b.disabled=false; b.textContent=lbl; $('#addFile').value='' }
+}
+
+async function quitarFotos(b){
+  if(b.length>=S.photos.length)
+    return alert('Esas son todas las fotos del viaje. Si lo querés borrar, entrá a "Editar el viaje".');
+  if(b.length>1&&!confirm('Son '+b.length+' fotos casi iguales, sacadas una atrás de la otra. ¿Las saco a todas?')) return;
+  const ids=new Set(b.map(phKey));
+  S.photos=S.photos.filter(p=>!ids.has(phKey(p)));
+  /* Primero se rearma: si el viaje no sobrevive, no borramos nada del disco. */
+  if(!rearmar()) return alert('Sin esas fotos no queda viaje. Volvé a abrirlo desde el panel y probá de otra forma.');
+  for(const p of b) if(p.id) try{ await dbDel('photos',p.id) }catch(e){}
+  trasRearmar();
+}
+
+/* El título automático es descriptivo, no lindo: sirve hasta que le pongas uno. */
+function autoTitle(){
+  const uniq=[...new Set(S.trip.paradas.map(p=>p.name))];
+  return uniq.length<=3? uniq.join(' · ') : `${uniq[0]} y ${uniq.length-1} lugares más`;
+}
+function editTrip(){
+  if(!S.trip) return;
+  const P=S.trip.paradas;
+  const c=el('div','fix');
+  c.innerHTML=`
+   <div><label>Cómo se llama el viaje</label>
+     <input id="eT" placeholder="${esc(autoTitle())}" value="${esc(S.title||'')}"></div>
+   <div><label>Las paradas</label><div class="plist" id="eP">${P.map((p,i)=>
+     `<div class="prow"><input data-i="${i}" value="${esc(p.name)}">
+       <s>${p.days.length}d · ${p.photos.length}f</s>
+       ${P.length>1?`<button class="danger" data-x="${i}" title="Sacar esta parada">✕</button>`:''}</div>`).join('')}</div>
+     <div class="mnote" style="margin-top:8px">Renombrar cambia el nombre en todo el viaje y en los vuelos. Sacar una parada borra sus fotos.</div></div>
+   <button class="btn" id="eS">Guardar</button>
+   <button class="btn ghost danger" id="eD">Borrar el viaje entero</button>`;
+  c.querySelectorAll('[data-x]').forEach(b=>b.onclick=async()=>{
+    const p=P[+b.dataset.x];
+    if(!confirm('Saco "'+p.name+'" del viaje. Se van sus '+p.photos.length+' fotos. ¿Dale?')) return;
+    closeEdit(); await quitarFotos(p.photos.slice());
+  });
+  c.querySelector('#eS').onclick=()=>{
+    S.title=c.querySelector('#eT').value.trim()||null;
+    /* El nombre que pusiste se guarda contra el nombre que puso el mapa, no
+       contra la parada: si mañana rearmamos el viaje, sigue valiendo. */
+    S.renames=S.renames||{};
+    c.querySelectorAll('#eP input[data-i]').forEach(inp=>{
+      const p=P[+inp.dataset.i], v=inp.value.trim();
+      const auto=p.auto||p.name;
+      if(!v||v===p.name) return;
+      if(v===auto) delete S.renames[auto]; else S.renames[auto]=v;
+      p.name=v;
+    });
+    closeEdit(); renderTrip(); guardar();
+  };
+  c.querySelector('#eD').onclick=async()=>{
+    if(!confirm('Borro este viaje y sus fotos para siempre. No hay deshacer.')) return;
+    if(S.tripId) await deleteTrip(S.tripId);
+    closeEdit(); nuevoViaje(); irAlPanel();
+  };
+  openEdit(c,'Editar el viaje');
 }
 
 /* ============ ESCRITO ============ */
@@ -1164,6 +1641,89 @@ function renderRec(){
     fl.map(t=>`<tr><td>${dshort(t.date)}</td><td>${t.route.legs.map(l=>l[0]).join(' → ')}</td><td style="color:var(--tx3)">${t.route.via?t.route.via[1].split(/[-\/]/)[0]:'directo'}</td><td class="n">${fmtN(t.route.km)}</td><td class="n">${flyHours(t.route.km).toFixed(1)}</td></tr>`).join('');
 }
 
+/* ============ PANEL ============
+   Lo que ves al entrar: el acumulado de todo, no el viaje de hoy. */
+function tripSpan(r){
+  const f=r.paradas[0], l=r.paradas.at(-1);
+  return [new Date(f.from), new Date(l.to)];
+}
+function tripTitle(r){
+  if(r.title) return r.title;
+  const u=[...new Set(r.paradas.map(p=>p.name))];
+  return u.length<=3? u.join(' · ') : `${u[0]} y ${u.length-1} lugares más`;
+}
+/* El récord de toda tu vida de vuelo, sumando viaje por viaje. Cada vuelo
+   cuenta una vez aunque dos viajes pasen por el mismo aeropuerto. */
+function lifeStats(recs){
+  const aps=new Set(), ctry=new Set(), ciudades=new Set();
+  let km=0,hrs=0,vuelos=0,dias=0;
+  recs.forEach(r=>{
+    r.paradas.forEach(p=>{ ciudades.add(p.name); if(p.cc)ctry.add(p.cc); dias+=(p.days||[]).length });
+    (r.tramos||[]).forEach(t=>{
+      if(t.mode!=='fly'||!t.route) return;
+      vuelos++; km+=t.route.km||0; hrs+=flyHours(t.route.km||0);
+      (t.route.legs||[]).forEach(c=>{ const a=apIn(c); if(a){aps.add(a[0]);ctry.add(a[2])} });
+    });
+  });
+  return {km,hrs,vuelos,dias,aps:aps.size,ctry:ctry.size,ciudades:ciudades.size,viajes:recs.length};
+}
+/* Los arcos de todos los viajes en un solo mapa. mapSVG pide tramos vivos,
+   así que rehidratamos las rutas guardadas; no toca el disco de nuevo. */
+function panelMap(recs){
+  const tramos=[], paradas=[], vistas=new Set();
+  recs.forEach(r=>{
+    (r.tramos||[]).forEach(t=>{
+      const rt=routeIn(t.route);
+      if(!rt&&t.mode!=='ground') return;
+      tramos.push({a:t.a,b:t.b,mode:t.mode,orig:t.orig,route:rt,confirmed:true});
+    });
+    r.paradas.forEach(p=>{ if(vistas.has(p.name))return; vistas.add(p.name); paradas.push({name:p.name,c:p.c}) });
+  });
+  return {tramos,paradas};
+}
+async function renderPanel(){
+  const recs=await listTrips();
+  const u=AUTH.user||{};
+  $('#pHi').textContent=u.name?`Hola, ${u.name}`:'Tu bitácora';
+  const st=lifeStats(recs);
+  $('#pSub').innerHTML=recs.length
+    ? `<span>${st.viajes} viaje${st.viajes>1?'s':''}</span><s>·</s><span>${st.ciudades} lugares</span><s>·</s><span>${st.ctry} países</span>`
+    : '<span>Todavía no cargaste ningún viaje</span>';
+  $('#pStats').innerHTML=[[fmtN(st.km)+' km','volados'],[(st.km/40075).toFixed(2),'vueltas al mundo'],
+    [st.vuelos,'vuelos'],[st.hrs.toFixed(0)+' h','en el aire'],[st.aps,'aeropuertos']]
+    .map(s=>`<div class="stat"><b>${s[0]}</b><s>${s[1]}</s></div>`).join('');
+  const box=$('#pMapBox');
+  if(recs.length){
+    const {tramos,paradas}=panelMap(recs);
+    box.hidden=false;
+    /* El mapa del panel no tiene "casa del viaje": la casa es la del perfil. */
+    box.innerHTML=tramos.length?mapSVG(tramos,paradas,S.homeCity?S.home:null,null):'';
+    box.hidden=!tramos.length;
+  } else box.hidden=true;
+  const host=$('#pTrips'); host.innerHTML='';
+  if(!recs.length){
+    host.innerHTML=`<div class="empty">Cargá las fotos de un viaje y va a quedar guardado acá para siempre.<br>Podés volver a abrirlo, corregirle los vuelos o sumarle fotos cuando quieras.</div>`;
+    return;
+  }
+  for(const r of recs){
+    const [f,l]=tripSpan(r), dias=Math.round((l-f)/864e5)+1;
+    const fl=(r.tramos||[]).filter(t=>t.mode==='fly'&&t.route);
+    const km=fl.reduce((s,t)=>s+(t.route.km||0),0);
+    const cover=(await dbBy('photos','tripId',r.id))[0];
+    const c=el('button','tripcard');
+    c.innerHTML=`${cover&&cover.thumb?`<img class="tc" src="${cover.thumb}" alt="">`:'<div class="tc"></div>'}
+      <div class="ti"><b>${esc(tripTitle(r))}</b>
+        <s>${dshort(f)} – ${dshort(l)} ${l.getFullYear()} · ${dias} día${dias>1?'s':''} · ${r.paradas.length} parada${r.paradas.length>1?'s':''}</s></div>
+      <div class="tk"><b>${fmtN(km)}</b>km · ${fl.length} vuelo${fl.length===1?'':'s'}</div>`;
+    c.onclick=()=>abrirViaje(r.id);
+    host.appendChild(c);
+  }
+}
+async function abrirViaje(id){
+  if(!await openTrip(id)) return alert('No pude abrir ese viaje. Puede que le falten las fotos.');
+  paintChip(); renderTrip(); show('vTrip');
+}
+
 /* ============ DEMO ============ */
 function demoImg(i,label,hue){
   const c=document.createElement('canvas');c.width=c.height=300;const x=c.getContext('2d');
@@ -1209,9 +1769,9 @@ function runDemo(){
 }
 
 /* ============ nav & wiring ============ */
-const VIEWS=['vDrop','vLoad','vIv','vTrip','vWrite','vRec'];
+const VIEWS=['vAuth','vPanel','vDrop','vLoad','vIv','vTrip','vWrite','vRec'];
 function show(v){VIEWS.forEach(x=>$('#'+x).hidden=(x!==v));window.scrollTo(0,0);
-  [['#nTrip','vTrip'],['#nWrite','vWrite'],['#nRec','vRec']].forEach(([s,t])=>$(s).classList.toggle('on',t===v));}
+  [['#nPanel','vPanel'],['#nTrip','vTrip'],['#nWrite','vWrite'],['#nRec','vRec']].forEach(([s,t])=>$(s).classList.toggle('on',t===v));}
 /* En el celular no hay nada que arrastrar: cambiamos el texto.
    Envuelto porque si esto tira, se cae todo el wiring de abajo. */
 try{
@@ -1264,14 +1824,95 @@ $('#homeSave').onclick=()=>{
 };
 $('#homeInput').addEventListener('keydown',e=>{ if(e.key==='Enter'){e.preventDefault();$('#homeSave').click()} });
 $('#chipEdit').onclick=()=>openHomeModal();
-/* Lo primero que ve alguien que abre la app: la pregunta de la casa.
-   Si ya la contestó otra vez, va derecho a las fotos. */
-if(loadHome()) paintChip(); else openHomeModal();
+
+/* ---- entrar, panel y perfil ---- */
+$('#auGo').onclick=async()=>{
+  const b=$('#auGo');
+  try{
+    await AUTH.signIn($('#auName').value,$('#auMail').value);
+  }catch(e){ return alert('Escribí tu nombre para entrar.') }
+  b.disabled=true;
+  /* Recién acá preguntamos la casa: antes de saber quién sos no tiene sentido. */
+  if(!loadHome()) openHomeModal(); else paintChip();
+  await irAlPanel(); b.disabled=false;
+};
+['#auName','#auMail'].forEach(s=>$(s).addEventListener('keydown',e=>{
+  if(e.key==='Enter'){e.preventDefault();$('#auGo').click()} }));
+async function irAlPanel(){
+  $('#nPanel').hidden=false; $('#nNew').hidden=false;
+  await renderPanel(); show('vPanel');
+}
+$('#nPanel').onclick=()=>irAlPanel();
+/* "Nuevo viaje" arranca de cero pero sin recargar: la sesión y los viajes
+   guardados siguen donde estaban. */
+function nuevoViaje(){
+  S.photos=[];S.noGeo=[];S.trip=null;S.trips=[];S.tramos=[];S.ivIdx=0;
+  S.skipped=false;S.heic=0;S.tripId=null;S.title=null;S.createdAt=null;S.renames={};
+  ['#nTrip','#nWrite','#nRec'].forEach(s=>$(s).hidden=true);
+  $('#timeline').classList.remove('editing');
+  show('vDrop');
+}
+$('#pNew').onclick=()=>nuevoViaje();
+$('#nNew').onclick=()=>nuevoViaje();
+
+/* ---------- los tres botones de editar ---------- */
+$('#tEdit').onclick=()=>editTrip();
+$('#tAdd').onclick=()=>$('#addFile').click();
+$('#addFile').onchange=e=>{ if(e.target.files.length) agregarFotos(e.target.files) };
+/* Sacar fotos es un modo que se prende y se apaga: el ✕ sobre cada foto,
+   siempre visible, es un accidente esperando pasar. */
+$('#tDel').onclick=()=>{
+  const on=$('#timeline').classList.toggle('editing');
+  $('#tDel').textContent=on?'Listo, no saco más':'Sacar fotos';
+  $('#tDel').classList.toggle('danger',on);
+};
+$('#editModal').addEventListener('click',e=>{ if(e.target.id==='editModal') closeEdit() });
+
+function openProf(){
+  const u=AUTH.user||{};
+  $('#prName').value=u.name||''; $('#prMail').value=u.email||'';
+  $('#prHome').textContent=S.homeCity?'🏠 '+cityLabel(S.homeCity):'🏠 Elegir tu casa';
+  listTrips().then(recs=>{
+    const st=lifeStats(recs);
+    $('#prStats').innerHTML=[[st.viajes,'viajes'],[st.vuelos,'vuelos'],[fmtN(st.km)+' km','volados'],
+      [st.ctry,'países'],[st.ciudades,'lugares'],[st.dias,'días de viaje']]
+      .map(s=>`<div class="stat"><b>${s[0]}</b><s>${s[1]}</s></div>`).join('');
+  });
+  $('#profModal').classList.add('on');
+}
+$('#pProf').onclick=()=>openProf();
+$('#prHome').onclick=()=>{ $('#profModal').classList.remove('on'); openHomeModal() };
+$('#prSave').onclick=async()=>{
+  await AUTH.update({name:$('#prName').value.trim()||AUTH.user.name,email:$('#prMail').value.trim()});
+  $('#profModal').classList.remove('on'); await renderPanel();
+};
+$('#prOut').onclick=async()=>{
+  if(!confirm('Cerrás sesión en este dispositivo. Tus viajes quedan guardados.')) return;
+  await AUTH.signOut(); $('#profModal').classList.remove('on');
+  ['#nPanel','#nTrip','#nWrite','#nRec','#nNew'].forEach(s=>$(s).hidden=true);
+  show('vAuth');
+};
+/* El respaldo es un archivo de texto con todo adentro, miniaturas incluidas.
+   Es la única red de seguridad real mientras no haya servidor. */
+$('#prExport').onclick=async()=>{
+  const trips=await listTrips(), photos=await dbAll('photos');
+  const blob=new Blob([JSON.stringify({v:1,perfil:AUTH.user,casa:S.homeCity,trips,photos})],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download='bitacora-respaldo.json'; a.click();
+};
+$('#profModal').addEventListener('click',e=>{ if(e.target.id==='profModal') $('#profModal').classList.remove('on') });
+
+/* Lo primero que ve alguien que abre la app: quién es. Si ya entró antes,
+   va derecho al panel con todo lo suyo. */
+(async()=>{
+  try{ await AUTH.load() }catch(e){}
+  if(loadHome()) paintChip();
+  if(AUTH.user) await irAlPanel(); else show('vAuth');
+})();
 $('#skipAll').onclick=()=>{S.skipped=true;S.tramos.forEach(t=>{if(t.mode==='ask'&&!t.orig){t.orig='fly';t.mode='fly'}});finishIv()};
 $('#nTrip').onclick=()=>{show('vTrip')};
 $('#nWrite').onclick=()=>{show('vWrite');paintProse()};
 $('#nRec').onclick=()=>{renderRec();show('vRec')};
-$('#nNew').onclick=()=>location.reload();
 document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
   document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('on'));b.classList.add('on');
   S.tone=b.dataset.tone;paintProse()});
